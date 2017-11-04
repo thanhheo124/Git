@@ -54,6 +54,8 @@ public class DatabaseConnection {
 	
 	/*-------------------- Handle Store Subject --------------------*/
 	public int insertSubject(Subject subject) {
+		if(isConnected == false)
+			return 0;
 		int count = 0;
 		String sql = "SELECT * FROM dbo.tbSubject WHERE id = '" + subject.getId() +"'";
 		PreparedStatement stmt;
@@ -82,6 +84,9 @@ public class DatabaseConnection {
 	}
 	
 	public int updateSubject(Subject subject) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "UPDATE dbo.tbSubject SET name = N'"+
 		subject.getName()+"', num_chapter = "+
@@ -98,6 +103,9 @@ public class DatabaseConnection {
 	}
 	
 	public int deleteSubject(Subject subject){
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "DELETE FROM dbo.tbSubject WHERE id = '"+subject.getId()+"'";
 		try {
@@ -110,6 +118,8 @@ public class DatabaseConnection {
 	
 	public ArrayList<Subject> getAllSubject(){
 		ArrayList<Subject> arrayList = new ArrayList<Subject>();
+		if(isConnected == false)
+			return arrayList;
 		String sql = "SELECT * FROM dbo.tbSubject";
 		ResultSet resultSet;
 		String id, name, intro;
@@ -131,6 +141,9 @@ public class DatabaseConnection {
 	
 	/*-------------------- Quiz Question ---------------------------*/
 	public int insertQuizQuestion(QuizQuestion question) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "SELECT * FROM dbo.tbQuestion WHERE id = "+ question.getId() +"";
 		PreparedStatement stmt;
@@ -162,6 +175,9 @@ public class DatabaseConnection {
 	
 	public int updateQuizQuestion(QuizQuestion question)
 	{
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = 	"DELETE FROM dbo.tbQuizQuestion WHERE id = "+question.getId()+"\r\n" + 
 						"UPDATE dbo.tbQuestion SET content = '"+question.getContent()+"', chapter = "+question.getChapter()+", lvl = "+question.getLevel()+" WHERE id = 0\r\n" + 
@@ -177,6 +193,9 @@ public class DatabaseConnection {
 	
 	public int deleteQuizQuestion(QuizQuestion question)
 	{
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = 	"DELETE FROM dbo.tbQuizQuestion WHERE id = "+question.getId()+"\r\n" + 
 						"DELETE FROM dbo.tbQuestion WHERE id = "+question.getId()+"";
@@ -191,6 +210,8 @@ public class DatabaseConnection {
 	public ArrayList<QuizQuestion> getAllQuizQuestion(String subjectId)
 	{
 		ArrayList<QuizQuestion> arrayList = new ArrayList<QuizQuestion>();
+		if(isConnected == false)
+			return arrayList;
 		String sqlCommon = "SELECT dbo.tbQuestion.id, dbo.tbQuestion.content,dbo.tbQuestion.s_id, dbo.tbQuestion.chapter, dbo.tbQuestion.lvl, dbo.tbQuizQuestion.suggestion\r\n" + 
 				"FROM (dbo.tbQuestion JOIN dbo.tbQuizQuestion ON tbQuizQuestion.id = tbQuestion.id) WHERE dbo.tbQuestion.s_id = '"+subjectId+"'";
 		ResultSet resultSetCommon;
@@ -215,6 +236,9 @@ public class DatabaseConnection {
 	
 	/*-------------------- Choice Question -------------------------*/
 	public int insertChoiceQuestion(ChoiceQuestion question) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "SELECT * FROM dbo.tbQuestion WHERE s_id = '"+question.getId()+"'";
 		ResultSet resultSet;
@@ -246,6 +270,9 @@ public class DatabaseConnection {
 	}
 	
 	public int updateChoiceQuestion(ChoiceQuestion question){
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "DELETE FROM dbo.tbChoiceQuestion WHERE id = "+question.getId()+""
 				+ "DELETE FROM dbo.tbQuestion WHERE id = "+question.getId()+"";
@@ -260,6 +287,9 @@ public class DatabaseConnection {
 	}
 	
 	public int deleteChoiceQuestion(ChoiceQuestion question) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "DELETE FROM dbo.tbChoiceQuestion WHERE id = "+question.getId()+""
 				+ "DELETE FROM dbo.tbQuestion WHERE id = "+question.getId()+"";
@@ -274,6 +304,8 @@ public class DatabaseConnection {
 	public ArrayList<ChoiceQuestion> getAllChoiceQuestion(String subjectId)
 	{
 		ArrayList<ChoiceQuestion> arrayList = new ArrayList<ChoiceQuestion>();
+		if(isConnected == false)
+			return arrayList;
 		String sql1 = "SELECT * FROM dbo.tbQuestion\r\n" + 
 				"WHERE 0 < (SELECT COUNT(*) FROM dbo.tbChoiceQuestion WHERE dbo.tbChoiceQuestion.id = dbo.tbQuestion.id) AND dbo.tbQuestion.s_id = '"+subjectId+"'";
 		ResultSet resultSetQ = null, resultSetA = null;
@@ -311,6 +343,9 @@ public class DatabaseConnection {
 	
 	/*--------------------- User-----------------------------------*/
 	public int insertUser(User user) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		
 		String check = "SELECT * FROM dbo.tbUser WHERE name = '"+user.getName()+"'";
@@ -328,6 +363,9 @@ public class DatabaseConnection {
 	}
 	
 	public int updateUser(User user) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "UPDATE dbo.tbUser SET pass = '"+user.getPass()+"', isadmin = "+user.isAdmin()+" WHERE name = '"+user.getName()+"'";
 		try {
@@ -339,6 +377,9 @@ public class DatabaseConnection {
 	}
 	
 	public int deleteUser(String name) {
+		if(isConnected == false)
+			return 0;
+		
 		int count = 0;
 		String sql = "DELETE FROM dbo.tbUser WHERE name = '"+name+"'";
 		try {
@@ -350,6 +391,8 @@ public class DatabaseConnection {
 	}
 	
 	public User getUser(String name) {
+		if(isConnected == false)
+			return null;
 		User user2 = null;
 		String sql = "SELECT * FROM dbo.tbUser WHERE name = '"+name+"'";
 		try {
