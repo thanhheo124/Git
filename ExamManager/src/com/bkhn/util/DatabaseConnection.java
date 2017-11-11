@@ -107,7 +107,15 @@ public class DatabaseConnection {
 			return 0;
 		
 		int count = 0;
-		String sql = "DELETE FROM dbo.tbSubject WHERE id = '"+subject.getId()+"'";
+		String sql = "DELETE FROM dbo.tbQuizQuestion WHERE dbo.tbQuizQuestion.id IN \r\n" + 
+				"(SELECT dbo.tbQuestion.id FROM dbo.tbQuestion WHERE dbo.tbQuestion.s_id = '"+subject.getId()+"')\r\n" + 
+				"\r\n" + 
+				"DELETE FROM dbo.tbChoiceQuestion WHERE dbo.tbChoiceQuestion.id IN \r\n" + 
+				"(SELECT dbo.tbQuestion.id FROM dbo.tbQuestion WHERE dbo.tbQuestion.s_id = '"+subject.getId()+"')\r\n" + 
+				"\r\n" + 
+				"DELETE FROM dbo.tbQuestion WHERE dbo.tbQuestion.s_id = '"+subject.getId()+"'\r\n" + 
+				"\r\n" + 
+				"DELETE FROM dbo.tbSubject WHERE dbo.tbSubject.id = '"+subject.getId()+"'";
 		try {
 			count = m_statement.executeUpdate(sql);
 		} catch (Exception e) {
