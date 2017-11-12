@@ -4,7 +4,6 @@ public class QuizQuestion extends Question{
 	private String suggestion;
 
 	public QuizQuestion() {
-		super();
 	}
 	
 	public QuizQuestion(int id, String content, String subject, int chapter, int level, String suggestion) {

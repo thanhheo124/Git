@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import com.bkhn.gui.GuiManageObject;
 import com.bkhn.gui.GuiManager;
-import com.bkhn.gui.interfacecommon.IManagerObject;
+import com.bkhn.interfacecommon.IManagerObject;
 import com.bkhn.model.Subject;
 import com.bkhn.util.DatabaseConnection;
 import com.bkhn.util.Printer;
 
 public class Controller implements IManagerObject{
-	private GuiManager m_guiManager;	
+	private GuiManager m_guiManager;
 	private DatabaseConnection m_dataBaseConnection;
 	private Printer m_printer;
 	private GuiManageObject m_guiManagerObject;

@@ -11,7 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.ICommonGui;
+
 
 @SuppressWarnings("serial")
 public class GuiStart extends JFrame implements ICommonGui{

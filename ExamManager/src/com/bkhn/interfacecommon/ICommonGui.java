@@ -1,4 +1,4 @@
-package com.bkhn.gui.interfacecommon;
+package com.bkhn.interfacecommon;
 
 public interface ICommonGui {
 	public void init();

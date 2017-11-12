@@ -5,7 +5,8 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.ICommonGui;
+
 
 @SuppressWarnings("serial")
 public class GuiChooseExam extends JFrame implements ICommonGui{

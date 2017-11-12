@@ -14,7 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.ICommonGui;
+
 
 public class GuiEditExam extends JFrame implements ICommonGui{
 

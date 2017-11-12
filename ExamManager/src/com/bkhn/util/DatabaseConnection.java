@@ -32,7 +32,7 @@ public class DatabaseConnection {
 	public boolean connectToDataBase()
 	{
 		try {
-		    String dbURL = "jdbc:sqlserver://localhost;databaseName=" + DB_NAME + ";user=sa;password=123456789";
+		    String dbURL = "jdbc:sqlserver://127.0.0.1:1433;databaseName=" + DB_NAME + ";integratedSecurity=True;";
 		    m_connection = DriverManager.getConnection(dbURL);
 		    if (m_connection != null) {
 		    	m_statement = m_connection.createStatement();

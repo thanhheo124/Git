@@ -20,8 +20,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
-import com.bkhn.gui.interfacecommon.IManagerObject;
+import com.bkhn.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.IManagerObject;
 import com.bkhn.model.Subject;
 
 public  class GuiManageObject extends JFrame implements ICommonGui,ActionListener, MouseListener{
@@ -129,6 +129,7 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 //		m_listSubject.add(sb1);
 //		m_listSubject.add(sb2);
 //		m_listSubject.add(sb3);
+		
 		
 		lblList = new JLabel("List Subject");
 		lblList.setBounds(24, 0, 190, 28);

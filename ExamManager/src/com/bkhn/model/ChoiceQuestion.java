@@ -7,7 +7,6 @@ public class ChoiceQuestion extends Question{
 	private ArrayList<String>	answers; 
 	
 	public ChoiceQuestion(){
-		super();
 	}
 	
 	public ChoiceQuestion(int id, String content, String subject, int chapter, int level, ArrayList<String> choices, ArrayList<String> answers) {
