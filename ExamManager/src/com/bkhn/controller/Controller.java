@@ -3,44 +3,39 @@ package com.bkhn.controller;
 import java.util.ArrayList;
 
 import com.bkhn.gui.GuiManageObject;
-import com.bkhn.gui.GuiManager;
 import com.bkhn.interfacecommon.IManagerObject;
 import com.bkhn.model.Subject;
-import com.bkhn.util.DatabaseConnection;
-import com.bkhn.util.Printer;
+import com.bkhn.util.FileIO;
 
-public class Controller implements IManagerObject{
-	private GuiManager m_guiManager;
-	private DatabaseConnection m_dataBaseConnection;
-	private Printer m_printer;
-	private GuiManageObject m_guiManagerObject;
-	
-	private ArrayList<Subject> m_Subjects;
-	
+public class Controller implements IManagerObject {
+	private ArrayList<Subject> subjects;
+	private FileIO fileIO;
+	private GuiManageObject guiManageObject;
 	
 	public Controller() {
-		m_dataBaseConnection = new DatabaseConnection();
-		m_dataBaseConnection.connectToDataBase();
-		
-		m_Subjects = m_dataBaseConnection.getAllSubject();
-		
-		m_guiManagerObject = new GuiManageObject();
-		m_guiManagerObject.setArrayListSubject(m_Subjects);
-		m_guiManagerObject.setOwnerObject(this);
-		m_guiManagerObject.guiManagerObjectStart();
-		m_guiManagerObject.setVisible(true);
+		fileIO = new FileIO();
+		subjects = fileIO.GetListSubject();
+		guiManageObject = new GuiManageObject();
+		guiManageObject.setArrayListSubject(subjects);
+		guiManageObject.setVisible(true);
 	}
-	
+
 	@Override
 	public void insertSuject(Subject subject) {
-		m_dataBaseConnection.insertSubject(subject);
+		// TODO Auto-generated method stub
+
 	}
+
 	@Override
 	public void deleteSubject(Subject subject) {
-		m_dataBaseConnection.deleteSubject(subject);
+		// TODO Auto-generated method stub
+
 	}
+
 	@Override
 	public void updateSubject(Subject subject) {
-		m_dataBaseConnection.updateSubject(subject);
+		// TODO Auto-generated method stub
+
 	}
+
 }

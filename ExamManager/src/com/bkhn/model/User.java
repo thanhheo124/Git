@@ -1,5 +1,7 @@
 package com.bkhn.model;
 
+import org.json.simple.JSONObject;
+
 public class User {
 	String name;
 	String pass;
@@ -33,9 +35,5 @@ public class User {
 	}
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
-	}
-	
-	public String toString() {
-		return "user:\t"+name + "\t" + pass + "\t" + admin;
 	}
 }
