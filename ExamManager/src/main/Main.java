@@ -6,6 +6,6 @@ import com.bkhn.gui.GuiManager;
 public class Main {
 	public static void main(String[] args) {
 		Controller controller = new Controller();
-		GuiManager guiManager = new GuiManager();
+		//GuiManager guiManager = new GuiManager();
 	}
 }

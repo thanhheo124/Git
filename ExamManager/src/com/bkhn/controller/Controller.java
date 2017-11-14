@@ -16,14 +16,15 @@ public class Controller implements IManagerObject {
 		fileIO = new FileIO();
 		subjects = fileIO.GetListSubject();
 		guiManageObject = new GuiManageObject();
-		guiManageObject.setArrayListSubject(subjects);
 		guiManageObject.setVisible(true);
+		//guiManageObject.setArrayListSubject(subjects);
+		guiManageObject.setOwner(this);
 	}
 
 	@Override
 	public void insertSuject(Subject subject) {
 		// TODO Auto-generated method stub
-
+		subjects.add(subject);
 	}
 
 	@Override
@@ -35,7 +36,6 @@ public class Controller implements IManagerObject {
 	@Override
 	public void updateSubject(Subject subject) {
 		// TODO Auto-generated method stub
-
 	}
 
 }
