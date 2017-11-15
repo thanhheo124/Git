@@ -58,4 +58,37 @@ public class ChoiceQuestion extends Question{
 				string+= "\n\t\t\t" + this.answers.get(i);
 		return string;
 	}
+	
+	@Override
+	public String ToQuestionString(){
+		String string = "";
+		string += content + "\n";
+		if(this.choices != null)
+			for(int i=0; i< this.choices.size(); i++)
+				string+= ""+ String.valueOf(Character.toChars('A' + i)) + ". " + this.choices.get(i)+ "\n";
+		return string;
+	}
+	
+	@Override
+	public String ToAnswerString()
+	{
+		String string = "";
+		if(this.answers != null)
+			for(int i=0; i< this.answers.size(); i++)
+			{
+				for(int j=0; j< this.choices.size(); j++){
+					if(answers.get(i).equals(choices.get(j))){
+						string+= ""+ String.valueOf(Character.toChars('A' + j)) + ". " + this.answers.get(i)+ "\n";
+					}
+				}
+			}
+		return string;
+	}
+	
+	@Override
+	public String ToJsonString()
+	{
+		
+		return null;
+	}
 }
