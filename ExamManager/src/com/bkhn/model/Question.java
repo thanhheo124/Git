@@ -53,4 +53,7 @@ public abstract class Question {
 	}
 
 	public abstract String QuestionToString();
+	public abstract String ToQuestionString();
+	public abstract String ToAnswerString();
+	public abstract String ToJsonString();
 }
