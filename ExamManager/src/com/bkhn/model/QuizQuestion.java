@@ -25,4 +25,19 @@ public class QuizQuestion extends Question{
 		return "QuizQuestion:\t" + id + "\t" + content + "\t" + subject +"\t" + chapter + "\t" + level + "\t" + suggestion;
 	}
 	
+	@Override
+	public String ToQuestionString() {
+		return content + "\n";
+	}
+
+	@Override
+	public String ToAnswerString() {
+		return suggestion + "\n";
+	}
+
+	@Override
+	public String ToJsonString() {
+
+		return null;
+	}
 }
