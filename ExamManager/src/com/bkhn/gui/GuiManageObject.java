@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -20,22 +21,20 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import com.bkhn.interfacecommon.ICommonGui;
-import com.bkhn.interfacecommon.IManagerObject;
+import com.bkhn.gui.interfacecommon.ICommonGui;
 import com.bkhn.model.Subject;
+import javax.swing.border.LineBorder;
 
 
 public  class GuiManageObject extends JFrame implements ICommonGui,ActionListener, MouseListener{
 
 	/**
-	 * 
+	 * by Trang
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH_FRAME = 700;
 	private static final int HEIGHT_FRAME = 400;
-	private static final String ACTION_ADDSUBJECT = "Thêm môn học";
 	private JLabel lblList;
-	private JLabel lblAddSubject;
 	private JLabel lblSubjectName;
 	private JLabel lblSubject_Id;
 	private JLabel lblChapterNumber;
@@ -47,17 +46,13 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 	private JButton btnSave;
 	private JButton btnCancel;
 	private JButton btnDelete;
-	private JButton btnOk;
 	private JScrollPane scrollPane;
 	private JTable tableListSubject;
 	private ArrayList<Subject> listSub;
-	private IManagerObject owner;
 	private DefaultTableModel dtmTable;
 	private int index;
 
 	public GuiManageObject() {
-		listSub = new ArrayList<Subject>();
-		owner = null;
 		init();
 		addComps();
 	}
@@ -69,15 +64,6 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-	}
-	
-	public void setOwner(IManagerObject owner) {
-		this.owner = owner;
-	}
-	
-	public void setArrayListSubject(ArrayList<Subject> subjects) {
-		listSub = subjects;
-		loadListSub(listSub, dtmTable);
 	}
 	
 	public void loadListSub(ArrayList<Subject> list, DefaultTableModel dtmTable){
@@ -107,19 +93,29 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		
 	}
 	
-	public void SaveSub(Subject sb,int index){
-		
+	public boolean checkSub(ArrayList<Subject> listSub,Subject sb){
+		boolean check=true;
+		for(Subject s:listSub){
+			if(sb.getName().equals(s.getName()))			
+				check=false;
+		}	
+		return check;
+	}
+	
+	public void UpdateSub(Subject sb,int index){		
 		listSub.set(index, sb);
 	}
 	
 	public void DeleteSub(ArrayList<Subject> listSub, int index){
 		listSub.remove(index);
 	}
+	
+	
 
 	@Override
 	public void addComps() {
 		
- 		//Create list Subject
+		// Create list Subject
 		listSub=new ArrayList<Subject>();
 		Subject sb1=new Subject("Lập trình hướng đối tượng","001",5,"Đây là môn học HDT");
 		Subject sb2=new Subject("Nhập môn CNTT","002",3,"Đây là môn học CNTT");
@@ -132,21 +128,6 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		lblList.setBounds(24, 0, 190, 28);
 		lblList.setFont(new Font("Tahoma", Font.BOLD, 16));
 		getContentPane().add(lblList);
-		
-		lblAddSubject = new JLabel("<html><u>Add a subject</u></html>");
-		lblAddSubject.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				txAIntroduce.setText("");
-				txFSubject_Id.setText("");
-				txFSubjectName.setText("");
-				spinnerChapterNumber.setValue(0);
-			}
-		});
-		lblAddSubject.setForeground(Color.BLUE);
-		lblAddSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAddSubject.setBounds(24, 236, 136, 28);
-		getContentPane().add(lblAddSubject);
 		
 		
 		
@@ -167,6 +148,7 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		getContentPane().add(lblIntroduce);
 		
 		txAIntroduce = new JTextArea();
+		txAIntroduce.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		txAIntroduce.setBounds(381, 173, 272, 74);
 		getContentPane().add(txAIntroduce);
 		
@@ -186,52 +168,56 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		spinnerChapterNumber.setBounds(381, 125, 46, 28);
 		getContentPane().add(spinnerChapterNumber);
 		
-		btnSave = new JButton("Save");
+		btnSave = new JButton("Add");
+		btnSave.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				Subject sb=GetSubject();
-				SaveSub(sb, index);
 				
+				if(checkSub(listSub, sb)==true){
+					int reply = JOptionPane.showConfirmDialog(null,"Do you really add ?","", JOptionPane.YES_NO_OPTION);
+					if (reply == JOptionPane.YES_OPTION) {
+						listSub.add(sb);
+						loadListSub(listSub, dtmTable);
+					}
+				}
+				else JOptionPane.showMessageDialog(null,"Subject exists");			
 			}
 		});
-		btnSave.setBounds(24, 290, 104, 36);
+		btnSave.setBounds(110, 270, 104, 36);
 		getContentPane().add(btnSave);
 		
-		btnCancel = new JButton("Cancel");
+		btnCancel = new JButton("Update");
+		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {	
+				int reply = JOptionPane.showConfirmDialog(null,"Do you really update?","", JOptionPane.YES_NO_OPTION);
 				
-				LoadInfoSub(listSub.get(index));
+				if (reply == JOptionPane.YES_OPTION) {
+					Subject sb=GetSubject();
+					UpdateSub(sb, index);
+			        }		
 			}
 		});
-		btnCancel.setBounds(186, 290, 104, 36);
+		btnCancel.setBounds(289, 270, 104, 36);
 		getContentPane().add(btnCancel);
 		
 		
 		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DeleteSub(listSub, index);
-				loadListSub(listSub, dtmTable);
+			public void actionPerformed(ActionEvent e) {			
+				int reply = JOptionPane.showConfirmDialog(null,"Do you really delete?","", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					DeleteSub(listSub, index);
+					loadListSub(listSub, dtmTable);
+			        }
 			}
 		});
 		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnDelete.setBackground(Color.RED);
 		btnDelete.setForeground(Color.WHITE);
-		btnDelete.setBounds(351, 290, 120, 38);
+		btnDelete.setBounds(459, 268, 120, 38);
 		getContentPane().add(btnDelete);
-		
-		btnOk = new JButton("OK");
-		btnOk.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Subject sb=GetSubject();
-				listSub.add(sb);
-				loadListSub(listSub, dtmTable);
-			}
-		});
-		btnOk.setBounds(529, 290, 115, 36);
-		getContentPane().add(btnOk);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(24, 41, 221, 182);
@@ -299,57 +285,5 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		
 	}
 
-	/*@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getSource().toString());
-		if(!(e.getSource() instanceof JLabel))
-			return;
-		
-		switch (((JLabel)e.getSource()).getName()) {
-		case ACTION_ADDSUBJECT:
-			JOptionPane.showMessageDialog(null, "Được rồi thầy ạ");
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if(!(e.getSource() instanceof JLabel))
-			return;
-		
-		switch (((JLabel)e.getSource()).getName()) {
-		case ACTION_ADDSUBJECT:
-			JOptionPane.showMessageDialog(null, "Được rồi thầy ạ");
-			break;
-
-		default:
-			break;
-		}
-	}
 	
-	
-	// Nothing todo
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}*/	
 }
