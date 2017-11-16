@@ -9,8 +9,8 @@ public class ChoiceQuestion extends Question{
 	public ChoiceQuestion(){
 	}
 	
-	public ChoiceQuestion(int id, String content, String subject, int chapter, int level, ArrayList<String> choices, ArrayList<String> answers) {
-		super(id, content, subject, chapter, level);
+	public ChoiceQuestion(String content, int chapter, int level, ArrayList<String> choices, ArrayList<String> answers) {
+		super(content, chapter, level);
 		this.choices = choices;
 		this.answers = answers;
 	}
@@ -47,7 +47,7 @@ public class ChoiceQuestion extends Question{
 	public String QuestionToString() {
 		// TODO Auto-generated method stub
 		String string = "";
-		string += "ChoiceQuestion:\t" + id + "\t" + content + "\t" + subject +"\t" + chapter + "\t" + level;
+		string += "ChoiceQuestion:\t" +"\t" + chapter + "\t" + level;
 		string += "\n\t\t\t choice:";
 		if(this.choices != null)
 			for(int i=0; i< this.choices.size(); i++)

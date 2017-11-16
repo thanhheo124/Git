@@ -1,9 +1,9 @@
 package com.bkhn.model;
 
+import org.json.simple.JSONObject;
+
 public abstract class Question {
-	protected int		id;
 	protected String 	content;
-	protected String 	subject;
 	protected int		chapter;
 	protected int		level;
 	
@@ -11,10 +11,8 @@ public abstract class Question {
 		
 	}
 	
-	public Question(int id, String content, String subject, int chapter, int level) {
-		this.id = id;
+	public Question(String content, int chapter, int level) {
 		this.content = content;
-		this.subject = subject;
 		this.chapter = chapter;
 		this.level = level;
 	}
@@ -24,12 +22,6 @@ public abstract class Question {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
 	}
 	public int getChapter() {
 		return chapter;
@@ -44,16 +36,18 @@ public abstract class Question {
 		this.level = level;
 	}
 	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public abstract String QuestionToString();
 	public abstract String ToQuestionString();
 	public abstract String ToAnswerString();
 	public abstract String ToJsonString();
+	
+	public JSONObject ToJsonObject()
+	{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("content", content);
+		jsonObject.put("chapter", new Integer(chapter));
+		jsonObject.put("level", new Integer(level));
+		return jsonObject;
+	}
+	
 }

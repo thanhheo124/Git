@@ -28,12 +28,9 @@ public class ControllerQuestion {
 		// Add Question : (Manh will delele them after you solve invole
 		// database.
 		// Begin delete
-		QuizQuestion quizQuestion1 = new QuizQuestion(1, "Is thanh a handsome man?", "OK", 1, 1,
-				"not only handsome but also intelligent");
-		QuizQuestion quizQuestion2 = new QuizQuestion(2, "Toi dang code bai OOP co phai khong?", "OK", 2, 3,
-				"Dung roi ban oi");
-		QuizQuestion quizQuestion3 = new QuizQuestion(3, "Ha noi dem nay day sao, tai sao em con ngoi do?", "OK", 1, 1,
-				"Vi ngoi do ngam sao ma a?");
+		QuizQuestion quizQuestion1 = new QuizQuestion();
+		QuizQuestion quizQuestion2 = new QuizQuestion();
+		QuizQuestion quizQuestion3 = new QuizQuestion();
 
 		listQuizQuestion.add(quizQuestion1);
 		listQuizQuestion.add(quizQuestion2);
@@ -58,9 +55,8 @@ public class ControllerQuestion {
 		listAnswer2.add("Ừm");
 		listAnswer2.add("Gần đúng");
 
-		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion(1, "1 +1 = ?", "Toán", 2, 2, listChoice1, listAnswers1);
-		ChoiceQuestion choiceQuestion2 = new ChoiceQuestion(2, "thành đẹp trai có phải không?", "Đẹp trai học", 1, 3,
-				listChoice2, listAnswer2);
+		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion();
+		ChoiceQuestion choiceQuestion2 = new ChoiceQuestion();
 		// End delete
 		listChoiceQuestion.add(choiceQuestion1);
 		listChoiceQuestion.add(choiceQuestion2);

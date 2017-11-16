@@ -256,8 +256,8 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		txPaneContentQues.setText(model.getValueAt(i, 0).toString());
 		if (rdEssay.isSelected()) {
 			for (int j = 0; j < listQuizQuestion.size(); j++) {
-				id_CH = listQuizQuestion.get(i).getId();
-				nameSubject = listQuizQuestion.get(i).getSubject();
+//				id_CH = listQuizQuestion.get(i).getId();
+//				nameSubject = listQuizQuestion.get(i).getSubject();
 				// Set data to form
 				txPaneAnswerQuiz.setText(listQuizQuestion.get(j).getSuggestion());
 				cbbLevel.setSelectedItem((listQuizQuestion.get(j).getLevel() + "").toString());
@@ -272,8 +272,8 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 				modelTableAnswer.setRowCount(0);
 				showTableAnswer(listChoiceQuestion.get(j));
 
-				id_CH = listChoiceQuestion.get(i).getId();
-				nameSubject = listChoiceQuestion.get(i).getSubject();
+//				id_CH = listChoiceQuestion.get(i).getId();
+//				nameSubject = listChoiceQuestion.get(i).getSubject();
 
 				// Set data to form
 				cbbLevel.setSelectedItem((listChoiceQuestion.get(j).getLevel() + "").toString());
@@ -297,9 +297,10 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			 */
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ChoiceQuestion choiceQuestion = new ChoiceQuestion(id_CH, txPaneContentQues.getText(), nameSubject,
-						Common.partInt((String) cbbChapter.getSelectedItem()),
-						Common.partInt((String) cbbLevel.getSelectedItem()), null, null);
+				ChoiceQuestion choiceQuestion = new ChoiceQuestion();
+//				id_CH, txPaneContentQues.getText(), nameSubject,
+//						Common.partInt((String) cbbChapter.getSelectedItem()),
+//						Common.partInt((String) cbbLevel.getSelectedItem()), null, null);
 
 				if (m_ownerQuetion.deleteChoiceQuestion(choiceQuestion)) {
 					JOptionPane.showMessageDialog(null, "Delete succes");
@@ -333,9 +334,10 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			 */
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				QuizQuestion quizQuestion = new QuizQuestion(id_CH, txPaneContentQues.getText(), nameSubject,
-						Common.partInt((String) cbbChapter.getSelectedItem()),
-						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
+				QuizQuestion quizQuestion = new QuizQuestion();
+//				id_CH, txPaneContentQues.getText(), nameSubject,
+//						Common.partInt((String) cbbChapter.getSelectedItem()),
+//						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
 				if (m_ownerQuetion.deleteQuizQuestion(quizQuestion)) {
 					JOptionPane.showMessageDialog(null, "Delete Succes");
 				}
@@ -358,9 +360,10 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				if (!conditionInsertQuestion()) {
-					QuizQuestion quizQuestion = new QuizQuestion(id_CH, txPaneContentQues.getText(), nameSubject,
-							Common.partInt((String) cbbChapter.getSelectedItem()),
-							Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
+					QuizQuestion quizQuestion = new QuizQuestion();
+//							id_CH, txPaneContentQues.getText(), nameSubject,
+//							Common.partInt((String) cbbChapter.getSelectedItem()),
+//							Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
 					if (m_ownerQuetion.upDateQuizQuestion(quizQuestion)) {
 						JOptionPane.showMessageDialog(null, "Delete Thành công");
 					}
@@ -483,9 +486,10 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			 */
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				QuizQuestion quizQuestion = new QuizQuestion(0, txPaneContentQues.getText(), nameSubject,
-						Common.partInt((String) cbbChapter.getSelectedItem()),
-						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
+				QuizQuestion quizQuestion = new QuizQuestion();
+//						0, txPaneContentQues.getText(), nameSubject,
+//						Common.partInt((String) cbbChapter.getSelectedItem()),
+//						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
 				if (m_ownerQuetion.insertQuizQuestion(quizQuestion)) {
 					JOptionPane.showMessageDialog(null, "Insert success");
 				}
