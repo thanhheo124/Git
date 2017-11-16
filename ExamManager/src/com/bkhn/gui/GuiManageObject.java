@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -19,14 +18,15 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.IManagerObject;
 import com.bkhn.model.Subject;
-import javax.swing.border.LineBorder;
 
 
-public  class GuiManageObject extends JFrame implements ICommonGui,ActionListener, MouseListener{
+public  class GuiManageObject extends JFrame implements ICommonGui,ActionListener	{
 
 	/**
 	 * by Trang
@@ -38,7 +38,7 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 	private JLabel lblSubjectName;
 	private JLabel lblSubject_Id;
 	private JLabel lblChapterNumber;
-	private JLabel lblIntroduce;
+	private JLabel lblIntroduce;	
 	private JTextArea txAIntroduce;
 	private JTextField txFSubjectName;
 	private JTextField txFSubject_Id;
@@ -51,13 +51,13 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 	private ArrayList<Subject> listSub;
 	private DefaultTableModel dtmTable;
 	private int index;
-
+	private IManagerObject owner;
 	public GuiManageObject() {
+		listSub=new ArrayList<Subject>();
 		init();
 		addComps();
 	}
 	
-	@Override
 	public void init() {
 		setTitle("Manage Subject");
 		setSize(WIDTH_FRAME, HEIGHT_FRAME);
@@ -112,17 +112,15 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 	
 	
 
-	@Override
-	public void addComps() {
-		
-		// Create list Subject
-		listSub=new ArrayList<Subject>();
-		Subject sb1=new Subject("Lập trình hướng đối tượng","001",5,"Đây là môn học HDT");
-		Subject sb2=new Subject("Nhập môn CNTT","002",3,"Đây là môn học CNTT");
-		Subject sb3=new Subject("Thiết kế và lập trình web","003",7,"Đây là môn học thiết kế website");
-		listSub.add(sb1);
-		listSub.add(sb2);
-		listSub.add(sb3);
+	public void addComps() {	
+//		// Create list Subject
+//		listSub=new ArrayList<Subject>();
+//		Subject sb1=new Subject("Lập trình hướng đối tượng","001",5,"Đây là môn học HDT");
+//		Subject sb2=new Subject("Nhập môn CNTT","002",3,"Đây là môn học CNTT");
+//		Subject sb3=new Subject("Thiết kế và lập trình web","003",7,"Đây là môn học thiết kế website");
+//		listSub.add(sb1);
+//		listSub.add(sb2);
+//		listSub.add(sb3);
 		
 		lblList = new JLabel("List Subject");
 		lblList.setBounds(24, 0, 190, 28);
@@ -178,6 +176,7 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 					int reply = JOptionPane.showConfirmDialog(null,"Do you really add ?","", JOptionPane.YES_NO_OPTION);
 					if (reply == JOptionPane.YES_OPTION) {
 						listSub.add(sb);
+						owner.updateSubjectData(listSub);
 						loadListSub(listSub, dtmTable);
 					}
 				}
@@ -196,6 +195,8 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 				if (reply == JOptionPane.YES_OPTION) {
 					Subject sb=GetSubject();
 					UpdateSub(sb, index);
+					owner.updateSubjectData(listSub);
+					loadListSub(listSub, dtmTable);
 			        }		
 			}
 		});
@@ -210,6 +211,7 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 				if (reply == JOptionPane.YES_OPTION) {
 					DeleteSub(listSub, index);
 					loadListSub(listSub, dtmTable);
+					owner.updateSubjectData(listSub);
 			        }
 			}
 		});
@@ -249,34 +251,13 @@ public  class GuiManageObject extends JFrame implements ICommonGui,ActionListene
 		});
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void setArrayListSubject(ArrayList<Subject> subjects) {
+		listSub = subjects;
+		loadListSub(listSub, dtmTable);
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void setOwner(IManagerObject controller) {
+		owner = controller;
 	}
 
 	@Override
