@@ -1,14 +1,15 @@
 package com.bkhn.gui;
 
-import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Vector;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,19 +20,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.ICommonGui;
 import com.bkhn.model.ChoiceQuestion;
-import com.bkhn.model.Question;
 import com.bkhn.model.QuizQuestion;
-
-import javax.swing.border.LineBorder;
-import javax.swing.JPanel;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
 
 public class GuiEditExam extends JFrame implements ICommonGui{
 
@@ -40,7 +34,7 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 	private JLabel lblListQuestion;
 	private JScrollPane scrollPane;
 	private JTable tableListQuestion;
-	private JButton btnChooseRandomQuestion;
+	private JButton btnChooseRandomQuestion;	
 	private JLabel lblPointQuestion;
 	private JTextField txtPointQuestion;
 	private JButton btnAddToExam;
@@ -181,27 +175,26 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 		listQuiz=new ArrayList<QuizQuestion>();
 		listQuizExam=new ArrayList<QuizQuestion>();
 		
-		//create list question
-		
-		ChoiceQuestion choiceQuestion0 = new ChoiceQuestion( "Choise question 0", "IT101", 9, 8, null, null);
-		choiceQuestion0.addChoices("hanoi");
-		choiceQuestion0.addAnswers("hanoi");
-		choiceQuestion0.addChoices("vietnam");
-		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion( "Choise question 1", "IT101", 8, 0, null, null);
-		choiceQuestion1.addChoices("hanoi");
-		choiceQuestion1.addAnswers("hanoi");
-		choiceQuestion1.addChoices("vietnam");
-		
-		listChoice.add(choiceQuestion0);
-		listChoice.add(choiceQuestion1);
-		
-		//create list question
-		QuizQuestion question1 = new QuizQuestion( "QuizQuestion 0", "IT101", 2, 3, "suggestion0");
-		QuizQuestion question2 = new QuizQuestion( "QuizQuestion 1", "IT101", 2, 3, "suggestion1");
-		QuizQuestion question3 = new QuizQuestion( "QuizQuestion 2", "IT101", 2, 3, "suggestion2");
-		 listQuiz.add(question1);
-		 listQuiz.add(question2);
-		 listQuiz.add(question3);
+		//create list question	
+//		ChoiceQuestion choiceQuestion0 = new ChoiceQuestion( "Choise question 0", "IT101", 9, 8, null, null);
+//		choiceQuestion0.addChoices("hanoi");
+//		choiceQuestion0.addAnswers("hanoi");
+//		choiceQuestion0.addChoices("vietnam");
+//		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion( "Choise question 1", "IT101", 8, 0, null, null);
+//		choiceQuestion1.addChoices("hanoi");
+//		choiceQuestion1.addAnswers("hanoi");
+//		choiceQuestion1.addChoices("vietnam");
+//		
+//		listChoice.add(choiceQuestion0);
+//		listChoice.add(choiceQuestion1);
+//		
+//		//create list question
+//		QuizQuestion question1 = new QuizQuestion( "QuizQuestion 0", "IT101", 2, 3, "suggestion0");
+//		QuizQuestion question2 = new QuizQuestion( "QuizQuestion 1", "IT101", 2, 3, "suggestion1");
+//		QuizQuestion question3 = new QuizQuestion( "QuizQuestion 2", "IT101", 2, 3, "suggestion2");
+//		 listQuiz.add(question1);
+//		 listQuiz.add(question2);
+//		 listQuiz.add(question3);
 		 
 		
 		lblListQuestion = new JLabel("Danh sách câu hỏi");

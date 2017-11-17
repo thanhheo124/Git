@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import com.bkhn.gui.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.ICommonGui;
 
 public class GuiManageExam extends JFrame implements ICommonGui{
 
