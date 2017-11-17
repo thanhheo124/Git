@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.bkhn.model.ChoiceQuestion;
+import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
 
 public class FileIO {
@@ -120,6 +121,53 @@ public class FileIO {
 						String answer = (String) object.get("answers" + i);
 						question.addChoices(answer);
 					}
+					questiones.add(question);
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return questiones;
+	}
+	
+	/*------------------------ QuizQuestion ---------------------*/
+	public int UpdateListQuizQuestion(
+			ArrayList<QuizQuestion> quizQuestions, String subjectName) {
+		String content = "";
+		if (quizQuestions.size() <= 0)
+			return 0;
+		for (int i = 0; i < quizQuestions.size(); i++) {
+			content += quizQuestions.get(i).ToJsonString();
+			content += "\n";
+		}
+		WriteStringToFile(content, "\\" + subjectName, "quiz.txt");
+		return quizQuestions.size();
+	}
+	
+	public ArrayList<QuizQuestion> GetListQuizQuestion(String subjectName) {
+		ArrayList<QuizQuestion> questiones = new ArrayList<QuizQuestion>();
+
+		try {
+			File directory = new File(ORIGINAL_PATH + "\\" + subjectName);
+			if (!directory.exists())
+				directory.mkdirs();
+			BufferedReader reader = new BufferedReader(new FileReader(
+					ORIGINAL_PATH + "\\" + subjectName +"\\"+ "choice.txt"));
+			String str = null;
+			while ((str = reader.readLine()) != null) {
+				if (!str.equals("") && !str.equals("\n")) {
+					Object obj = JSONValue.parse(str);
+					JSONObject object = (JSONObject) obj;
+					String content = (String) object.get("content");
+					int chapter = Integer.parseInt(((Long) object.get("chapter")).toString());
+					int level = Integer.parseInt(((Long) object.get("level")).toString());
+					String suggestion = (String)object.get("suggestion");
+					QuizQuestion question = new QuizQuestion(content, chapter, level, suggestion);
 					questiones.add(question);
 				}
 			}
