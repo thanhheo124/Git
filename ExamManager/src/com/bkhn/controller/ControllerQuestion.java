@@ -28,9 +28,11 @@ public class ControllerQuestion {
 		// Add Question : (Manh will delele them after you solve invole
 		// database.
 		// Begin delete
-		QuizQuestion quizQuestion1 = new QuizQuestion();
-		QuizQuestion quizQuestion2 = new QuizQuestion();
-		QuizQuestion quizQuestion3 = new QuizQuestion();
+		
+		
+		QuizQuestion quizQuestion1 = new QuizQuestion("Đàm Duy Kiên", 1, 2, "Nội dung a");
+		QuizQuestion quizQuestion2 = new QuizQuestion("Chu Duy Kiên", 2, 3, "Nội dung x");
+		QuizQuestion quizQuestion3 = new QuizQuestion("Hà Duy Kiên", 3, 1, "Nội dung b");
 
 		listQuizQuestion.add(quizQuestion1);
 		listQuizQuestion.add(quizQuestion2);
@@ -55,9 +57,9 @@ public class ControllerQuestion {
 		listAnswer2.add("Ừm");
 		listAnswer2.add("Gần đúng");
 
-		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion();
-		ChoiceQuestion choiceQuestion2 = new ChoiceQuestion();
-		// End delete
+		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion("Cơn mưa ở hà nội?", 1, 2, listChoice1, listAnswers1);
+		ChoiceQuestion choiceQuestion2 = new ChoiceQuestion("HCM là tp đẹp nhất?",2,4,listChoice2,listAnswer2);
+		
 		listChoiceQuestion.add(choiceQuestion1);
 		listChoiceQuestion.add(choiceQuestion2);
 
