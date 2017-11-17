@@ -14,14 +14,15 @@ import org.json.simple.JSONValue;
 import com.bkhn.model.Subject;
 
 public class FileIO {
-	public static final String DEFAULT_PATH = "D:\\OOP\\data";
+	public static final String ORIGINAL_PATH = "D:\\OOP\\data";
 
-	public boolean WriteStringToFile(String content, String filePath, String fileName) {
+	public boolean WriteStringToFile(String content, String filePath,
+			String fileName) {
 		try {
-			File directory = new File(DEFAULT_PATH);
+			File directory = new File(ORIGINAL_PATH + filePath);
 			if (!directory.exists())
 				directory.mkdirs();
-			File file = new File(filePath + "\\" + fileName);
+			File file = new File(ORIGINAL_PATH + filePath + "\\" + fileName);
 			if (!file.exists())
 				file.createNewFile();
 
@@ -43,27 +44,29 @@ public class FileIO {
 			content += subjects.get(i).ToJsonString();
 			content += "\n";
 		}
-		WriteStringToFile(content, DEFAULT_PATH, "subjects.txt");
+		WriteStringToFile(content, "", "subjects.txt");
 		return subjects.size();
 	}
 
 	public ArrayList<Subject> GetListSubject() {
 		ArrayList<Subject> subjects = new ArrayList<Subject>();
 		try {
-			File directory = new File(DEFAULT_PATH);
+			File directory = new File(ORIGINAL_PATH + "");
 			if (!directory.exists())
 				directory.mkdirs();
-			BufferedReader reader = new BufferedReader(new FileReader(DEFAULT_PATH + "\\" + "subjects.txt"));
+			BufferedReader reader = new BufferedReader(new FileReader(
+					ORIGINAL_PATH + "\\" + "subjects.txt"));
 			String str;
 
 			while ((str = reader.readLine()) != null) {
 				if (!str.equals("") && !str.equals("\n")) {
 					Object obj = JSONValue.parse(str);
 					JSONObject object = (JSONObject) obj;
-					String name = (String)object.get("name");
-					String id = (String)object.get("id");
-					int numChapter = Integer.parseInt(((Long)object.get("numChapter")).toString());
-					String intro = (String)object.get("introduction");
+					String name = (String) object.get("name");
+					String id = (String) object.get("id");
+					int numChapter = Integer.parseInt(((Long) object
+							.get("numChapter")).toString());
+					String intro = (String) object.get("introduction");
 					Subject subject = new Subject(name, id, numChapter, intro);
 					subjects.add(subject);
 				}
@@ -71,5 +74,61 @@ public class FileIO {
 		} catch (IOException e) {
 		}
 		return subjects;
+	}
+
+	/*------------------------ ChoiceQuestion ---------------------*/
+	public int UpdateListChoiceQuestion(
+			ArrayList<ChoiceQuestion> choiceQuestions, String subjectName) {
+		String content = "";
+		if (choiceQuestions.size() <= 0)
+			return 0;
+		for (int i = 0; i < choiceQuestions.size(); i++) {
+			content += choiceQuestions.get(i).ToJsonString();
+			content += "\n";
+		}
+		WriteStringToFile(content, "\\" + subjectName, "choice.txt");
+		return choiceQuestions.size();
+	}
+
+	public ArrayList<ChoiceQuestion> GetListChoiceQuestion(String subjectName) {
+		ArrayList<ChoiceQuestion> questiones = new ArrayList<ChoiceQuestion>();
+
+		try {
+			File directory = new File(ORIGINAL_PATH + "\\" + subjectName);
+			if (!directory.exists())
+				directory.mkdirs();
+			BufferedReader reader = new BufferedReader(new FileReader(
+					ORIGINAL_PATH + "\\" + subjectName +"\\"+ "choice.txt"));
+			String str = null;
+			while ((str = reader.readLine()) != null) {
+				if (!str.equals("") && !str.equals("\n")) {
+					Object obj = JSONValue.parse(str);
+					JSONObject object = (JSONObject) obj;
+					String content = (String) object.get("content");
+					int chapter = Integer.parseInt(((Long) object.get("chapter")).toString());
+					int level = Integer.parseInt(((Long) object.get("level")).toString());
+					int numc = Integer.parseInt(((Long) object.get("numc")).toString());
+					int numa = Integer.parseInt(((Long) object.get("numa")).toString());
+					ChoiceQuestion question = new ChoiceQuestion(content,chapter, level, null, null);
+					for(int i=0; i< numc; i++){
+						String choice = (String) object.get("choices" + i);
+						question.addChoices(choice);
+					}
+					for(int i=0; i< numa; i++){
+						String answer = (String) object.get("answers" + i);
+						question.addChoices(answer);
+					}
+					questiones.add(question);
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return questiones;
 	}
 }
