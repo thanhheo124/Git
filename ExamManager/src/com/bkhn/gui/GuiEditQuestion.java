@@ -37,12 +37,14 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 */
 	private ArrayList<QuizQuestion> listQuizQuestion;
 	private ArrayList<ChoiceQuestion> listChoiceQuestion;
+	ArrayList<String> listChoice = new ArrayList<>();
 	private static final long serialVersionUID = 1L;
 	private static final int WIDTH_FRAME = 800;
 	private static final int HEIGHT_FRAME = 700;
 	private static final String ESSAY = "Essay";
 	private static final String MULTICHOICE = "Multichoice";
 	private static final int TABLEQUESTION_SOCOT = 1;
+	private static final String XOA = "Xoa";
 	private JLabel lblListQuestion;
 	private JLabel lblAddQuestion;
 	private JLabel lblTypeQuestion;
@@ -61,7 +63,6 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	private JLabel lblLevel;
 	private JLabel lblChapter;
 	private JScrollPane scrollPane_3;
-	private JTable tableQuestion;
 	private JButton btnOk;
 	private JButton btnCancel;
 	private JButton btnDelete;
@@ -75,8 +76,11 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 
 	private IManagerQuestion m_ownerQuetion;
 
-	private int id_CH = 0;
-	private String nameSubject = "";
+	private JTable tableQuestionQuiz;
+	private JTable tableQuestionChoose;
+
+	private int posQuizQues = 0;
+	private int posChoiceQues = 0;
 
 	public GuiEditQuestion() {
 		init();
@@ -202,6 +206,8 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		btnDelete.setForeground(Color.WHITE);
 		btnDelete.setBounds(416, 577, 97, 31);
 		getContentPane().add(btnDelete);
+		btnDelete.setActionCommand(XOA);
+		btnDelete.addActionListener(this);
 
 		btnOk = new JButton("OK");
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -227,123 +233,41 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		scrollPane_3.setBounds(33, 68, 279, 346);
 		getContentPane().add(scrollPane_3);
 
-		tableQuestion = new JTable();
-		tableQuestion.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		tableQuestion.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "New column" }));
-		scrollPane_3.setViewportView(tableQuestion);
-		tableQuestion.addMouseListener(new MouseAdapter() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
-			 * MouseEvent)
-			 */
-			@Override
-			public void mouseClicked(MouseEvent event) {
-				TableMouseClicked(event);
-			}
-		});
-	}
+		tableQuestionQuiz = new JTable();
+		tableQuestionQuiz.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tableQuestionQuiz.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "New column" }));
 
-	/**
-	 * When click a row in table => show infor question in diferent component
-	 * 
-	 * @param event
-	 */
-	protected void TableMouseClicked(MouseEvent event) {
-		int i = tableQuestion.getSelectedRow();
-		TableModel model = tableQuestion.getModel();
-		txPaneContentQues.setText(model.getValueAt(i, 0).toString());
-		if (rdEssay.isSelected()) {
-			for (int j = 0; j < listQuizQuestion.size(); j++) {
-//				id_CH = listQuizQuestion.get(i).getId();
-//				nameSubject = listQuizQuestion.get(i).getSubject();
-				// Set data to form
-				txPaneAnswerQuiz.setText(listQuizQuestion.get(j).getSuggestion());
-				cbbLevel.setSelectedItem((listQuizQuestion.get(j).getLevel() + "").toString());
-				cbbChapter.setSelectedItem((listQuizQuestion.get(i).getChapter() + "").toString());
-
-				updateQuizQuestion();
-				deleteQuestionQuiz();
-			}
-		} else {
-			for (int j = 0; j < listChoiceQuestion.size(); j++) {
-				DefaultTableModel modelTableAnswer = (DefaultTableModel) tableAnswer.getModel();
-				modelTableAnswer.setRowCount(0);
-				showTableAnswer(listChoiceQuestion.get(j));
-
-//				id_CH = listChoiceQuestion.get(i).getId();
-//				nameSubject = listChoiceQuestion.get(i).getSubject();
-
-				// Set data to form
-				cbbLevel.setSelectedItem((listChoiceQuestion.get(j).getLevel() + "").toString());
-				cbbChapter.setSelectedItem((listChoiceQuestion.get(i).getChapter() + "").toString());
-
-				deleteQuestionChoice();
-			}
-		}
+		tableQuestionChoose = new JTable();
+		tableQuestionChoose.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tableQuestionChoose.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "New column" }));
 	}
 
 	/**
 	 * 
 	 */
-	private void deleteQuestionChoice() {
-		btnDelete.addMouseListener(new MouseAdapter() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
-			 * MouseEvent)
-			 */
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ChoiceQuestion choiceQuestion = new ChoiceQuestion();
-//				id_CH, txPaneContentQues.getText(), nameSubject,
-//						Common.partInt((String) cbbChapter.getSelectedItem()),
-//						Common.partInt((String) cbbLevel.getSelectedItem()), null, null);
-
-				if (m_ownerQuetion.deleteChoiceQuestion(choiceQuestion)) {
-					JOptionPane.showMessageDialog(null, "Delete succes");
-				}
-			}
-		});
+	private void deleteQuestionChoice(ArrayList<ChoiceQuestion> liChoiceQuestions, int posChoiceQuestion) {
+		liChoiceQuestions.remove(posChoiceQuestion);
+		loadDataChoiceQuestion();
+		actionTableChoiceQuestion();
+		// done delete QuestionChoice
+		// if
+		// (m_ownerQuetion.deleteChoiceQuestion(liChoiceQuestions.get(posChoiceQuestion)))
+		// {
+		// JOptionPane.showMessageDialog(null, "Delete succes");
+		// }
 	}
 
 	/**
 	 * @param choiceQuestion
 	 */
-	private void showTableAnswer(ChoiceQuestion choiceQuestion) {
+	private void showTableAnswer(ArrayList<String> choiceQuestion) {
 		DefaultTableModel model = (DefaultTableModel) tableAnswer.getModel();
+		model.setRowCount(0);
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
-		for (int i = 0; i < choiceQuestion.getChoices().size(); i++) {
-			row[0] = choiceQuestion.getChoices().get(i).toString();
+		for (int i = 0; i < choiceQuestion.size(); i++) {
+			row[0] = choiceQuestion.get(i).toString();
 			model.addRow(row);
 		}
-	}
-
-	/**
-	 * 
-	 */
-	private void deleteQuestionQuiz() {
-		btnDelete.addMouseListener(new MouseAdapter() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.
-			 * event.MouseEvent)
-			 */
-			@Override
-			public void mouseClicked(MouseEvent event) {
-				QuizQuestion quizQuestion = new QuizQuestion();
-//				id_CH, txPaneContentQues.getText(), nameSubject,
-//						Common.partInt((String) cbbChapter.getSelectedItem()),
-//						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
-				if (m_ownerQuetion.deleteQuizQuestion(quizQuestion)) {
-					JOptionPane.showMessageDialog(null, "Delete Succes");
-				}
-
-			}
-		});
 	}
 
 	/**
@@ -359,79 +283,23 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			 */
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				if (!conditionInsertQuestion()) {
-					QuizQuestion quizQuestion = new QuizQuestion();
-//							id_CH, txPaneContentQues.getText(), nameSubject,
-//							Common.partInt((String) cbbChapter.getSelectedItem()),
-//							Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
-					if (m_ownerQuetion.upDateQuizQuestion(quizQuestion)) {
-						JOptionPane.showMessageDialog(null, "Delete Thành công");
-					}
-				}
+				QuizQuestion quizQuestion = new QuizQuestion();
+				quizQuestion.setChapter(Common.partInt((String) cbbChapter.getSelectedItem()));
+				quizQuestion.setContent(txPaneContentQues.getText());
+				quizQuestion.setSuggestion(txPaneAnswerQuiz.getText());
+				quizQuestion.setLevel(Common.partInt((String) cbbLevel.getSelectedItem()));
+
+				listQuizQuestion.set(posQuizQues, quizQuestion);
+				loadDataQuizQuestionToGui();
+				actionTableQuizQuestion();
+				// done edit
+
+				// if (m_ownerQuetion.upDateQuizQuestion(quizQuestion)) {
+				// JOptionPane.showMessageDialog(null, "Delete Thành công");
+				// }
 
 			}
 		});
-	}
-
-	/**
-	 * @param event
-	 * @return
-	 */
-	protected boolean conditionInsertQuestion() {
-		String textQues = txPaneContentQues.getText();
-		if ("".equals(txPaneAnswerQuiz.getText()) || "".equals(txPaneContentQues.getText())) {
-			JOptionPane.showMessageDialog(null, "Please insert data to form");
-			return false;
-		} else if (checkExistQuestiontoInsert(textQues)) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * @param textQues
-	 * @param textAnswer
-	 * @return
-	 */
-	private boolean checkExistQuestiontoInsert(String textQues) {
-		for (int i = 0; i < listQuizQuestion.size(); i++) {
-			if (listChoiceQuestion.get(i).getContent().equals(textQues)) {
-				JOptionPane.showMessageDialog(null, "question has existed in database");
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @param event
-	 */
-	protected boolean conditionEditQuestion() {
-		if ("".equals(txPaneAnswerQuiz.getText()) || "".equals(txPaneContentQues.getText())) {
-			JOptionPane.showMessageDialog(null, "Please insert data to form");
-			return false;
-		} else if (checkExistQuestion(txPaneContentQues.getText(), txPaneAnswerQuiz.getText())) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * @param text
-	 * @return
-	 */
-	private boolean checkExistQuestion(String text, String textAnswer) {
-		for (int i = 0; i < listQuizQuestion.size(); i++) {
-			if (text.equals(listQuizQuestion.get(i).getContent().toString())) {
-				if (textAnswer.equals(listQuizQuestion.get(i).getSuggestion().toString())) {
-					JOptionPane.showMessageDialog(null, "Please change content suggestion data to form");
-					return true;
-				}
-			} else {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/*
@@ -446,28 +314,35 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 
 		switch (actionString) {
 		case ESSAY: {
+			scrollPane_3.setViewportView(tableQuestionQuiz);
 			scrollPane_2.setViewportView((txPaneAnswerQuiz));
 			changeEventMulti("disable");
 			checkCanMixQuestion.setVisible(false);
 			rdEssay.setSelected(true);
 			rdMultipleChoice.setSelected(false);
-			DefaultTableModel model = (DefaultTableModel) tableQuestion.getModel();
-			model.setRowCount(0);
-			loadDataQuizQuestion(listQuizQuestion);
-			insertQuestion();
+			loadDataQuizQuestionToGui();
+			actionTableQuizQuestion();
 		}
 			break;
 
-		case MULTICHOICE:
+		case MULTICHOICE: {
+			scrollPane_3.setViewportView(tableQuestionChoose);
 			scrollPane_2.setViewportView((tableAnswer));
 			changeEventMulti("enable");
 			lblAdd.setVisible(true);
 			rdEssay.setSelected(false);
 			rdMultipleChoice.setSelected(true);
-			DefaultTableModel model = (DefaultTableModel) tableQuestion.getModel();
-			model.setRowCount(0);
-			loadDataChoiceQuestion(listChoiceQuestion);
+			loadDataChoiceQuestion();
+			actionTableChoiceQuestion();
+		}
 			break;
+
+		case XOA:
+			if (rdEssay.isSelected()) {
+				deleteQuestionQuiz(listQuizQuestion, posQuizQues);
+			} else {
+				deleteQuestionChoice(listChoiceQuestion, posChoiceQues);
+			}
 		default:
 			break;
 		}
@@ -476,7 +351,107 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	/**
 	 * 
 	 */
-	private void insertQuestion() {
+	private void actionTableChoiceQuestion() {
+		tableQuestionChoose.addMouseListener(new MouseAdapter() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
+			 * MouseEvent)
+			 */
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = tableQuestionChoose.getSelectedRow();
+				TableModel model = tableQuestionChoose.getModel();
+				txPaneContentQues.setText(model.getValueAt(i, 0).toString());
+				// // Set data to form
+				showTableAnswer(listChoiceQuestion.get(i).getChoices());
+				cbbLevel.setSelectedItem((listChoiceQuestion.get(i).getLevel() + "").toString());
+				cbbChapter.setSelectedItem((listChoiceQuestion.get(i).getChapter() + "").toString());
+				posChoiceQues = i;
+				updateChoiceQuestion();
+				insertChoiseQuestion();
+
+			}
+		});
+
+	}
+
+	/**
+	 * 
+	 */
+	protected void insertChoiseQuestion() {
+		// liên quan đến giao điện khác chưa xử lý
+	}
+
+	/**
+	 * 
+	 */
+	protected void updateChoiceQuestion() {
+		// liên quan đến giao điện khác chưa xuwr lý
+	}
+
+	/**
+	 * 
+	 */
+	private void loadDataChoiceQuestion() {
+		DefaultTableModel model = (DefaultTableModel) tableQuestionChoose.getModel();
+		model.setRowCount(0);
+		loadDataChoiceQuestion(listChoiceQuestion);
+	}
+
+	/**
+	 * 
+	 */
+	private void deleteQuestionQuiz(ArrayList<QuizQuestion> listQuizQuestion, int posQuizQues) {
+		listQuizQuestion.remove(posQuizQues);
+		loadDataQuizQuestionToGui();
+		actionTableQuizQuestion();
+		// done delete
+	}
+
+	/**
+	 * 
+	 */
+	private void actionTableQuizQuestion() {
+		tableQuestionQuiz.addMouseListener(new MouseAdapter() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
+			 * MouseEvent)
+			 */
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = tableQuestionQuiz.getSelectedRow();
+				TableModel model = tableQuestionQuiz.getModel();
+				txPaneContentQues.setText(model.getValueAt(i, 0).toString());
+				// // Set data to form
+				txPaneAnswerQuiz.setText(listQuizQuestion.get(i).getSuggestion());
+				cbbLevel.setSelectedItem((listQuizQuestion.get(i).getLevel() + "").toString());
+				cbbChapter.setSelectedItem((listQuizQuestion.get(i).getChapter() + "").toString());
+				posQuizQues = i;
+				updateQuizQuestion();
+				insertQuestionQuiz();
+
+			}
+		});
+
+	}
+
+	/**
+	 * 
+	 */
+	private void loadDataQuizQuestionToGui() {
+		DefaultTableModel model = (DefaultTableModel) tableQuestionQuiz.getModel();
+		model.setRowCount(0);
+		loadDataQuizQuestion(listQuizQuestion);
+	}
+
+	/**
+	 * 
+	 */
+	private void insertQuestionQuiz() {
 		lblAddQuestion.addMouseListener(new MouseAdapter() {
 			/*
 			 * (non-Javadoc)
@@ -487,9 +462,10 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				QuizQuestion quizQuestion = new QuizQuestion();
-//						0, txPaneContentQues.getText(), nameSubject,
-//						Common.partInt((String) cbbChapter.getSelectedItem()),
-//						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
+				// 0, txPaneContentQues.getText(), nameSubject,
+				// Common.partInt((String) cbbChapter.getSelectedItem()),
+				// Common.partInt((String) cbbLevel.getSelectedItem()),
+				// txPaneAnswerQuiz.getText());
 				if (m_ownerQuetion.insertQuizQuestion(quizQuestion)) {
 					JOptionPane.showMessageDialog(null, "Insert success");
 				}
@@ -537,7 +513,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 *            : list choiceQuestion
 	 */
 	private void loadDataChoiceQuestion(ArrayList<ChoiceQuestion> listChoiceQ) {
-		DefaultTableModel model = (DefaultTableModel) tableQuestion.getModel();
+		DefaultTableModel model = (DefaultTableModel) tableQuestionChoose.getModel();
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
 		for (int i = 0; i < listChoiceQ.size(); i++) {
 			row[0] = listChoiceQ.get(i).getContent();
@@ -552,10 +528,11 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 *            : list quiz Question
 	 */
 	private void loadDataQuizQuestion(ArrayList<QuizQuestion> listQuizQ) {
-		DefaultTableModel model = (DefaultTableModel) tableQuestion.getModel();
+		DefaultTableModel model = (DefaultTableModel) tableQuestionQuiz.getModel();
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
 		for (int i = 0; i < listQuizQ.size(); i++) {
 			row[0] = listQuizQ.get(i).getContent();
+			System.out.println(row[0]);
 			model.addRow(row);
 		}
 	}
@@ -575,4 +552,48 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	public void setListChoiceQuestion(ArrayList<ChoiceQuestion> listChoiceQuestion) {
 		this.listChoiceQuestion = listChoiceQuestion;
 	}
+
+	/**
+	 * When click a row in table => show infor question in diferent component
+	 * 
+	 * @param event
+	 */
+	// protected void TableMouseClicked(MouseEvent event) {
+	// int i = tableQuestion.getSelectedRow();
+	// TableModel model = tableQuestion.getModel();
+	// if (rdEssay.isSelected()) {
+	// for (int j = 0; j < listQuizQuestion.size(); j++) {
+	//// id_CH = listQuizQuestion.get(i).getId();
+	//// nameSubject = listQuizQuestion.get(i).getSubject();
+	// // Set data to form
+	// txPaneAnswerQuiz.setText(listQuizQuestion.get(j).getSuggestion());
+	// cbbLevel.setSelectedItem((listQuizQuestion.get(j).getLevel() +
+	// "").toString());
+	// cbbChapter.setSelectedItem((listQuizQuestion.get(i).getChapter() +
+	// "").toString());
+	//
+	// updateQuizQuestion();
+	// deleteQuestionQuiz();
+	// }
+	// } else {
+	// for (int j = 0; j < listChoiceQuestion.size(); j++) {
+	// DefaultTableModel modelTableAnswer = (DefaultTableModel)
+	// tableAnswer.getModel();
+	// modelTableAnswer.setRowCount(0);
+	// showTableAnswer(listChoiceQuestion.get(j));
+	//
+	//// id_CH = listChoiceQuestion.get(i).getId();
+	//// nameSubject = listChoiceQuestion.get(i).getSubject();
+	//
+	// // Set data to form
+	// cbbLevel.setSelectedItem((listChoiceQuestion.get(j).getLevel() +
+	// "").toString());
+	// cbbChapter.setSelectedItem((listChoiceQuestion.get(i).getChapter() +
+	// "").toString());
+	//
+	// deleteQuestionChoice();
+	// }
+	// }
+	// }
+
 }
