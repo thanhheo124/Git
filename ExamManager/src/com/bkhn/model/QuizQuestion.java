@@ -2,15 +2,18 @@ package com.bkhn.model;
 
 import org.json.simple.JSONObject;
 
-public class QuizQuestion extends Question{
+public class QuizQuestion extends Question {
 	private String suggestion;
 
 	public QuizQuestion() {
+		this.isChoiceQ = false;
 	}
-	
-	public QuizQuestion(String content, int chapter, int level, String suggestion) {
-		super(content,chapter, level);
+
+	public QuizQuestion(String content, int chapter, int level,
+			String suggestion) {
+		super(content, chapter, level);
 		this.suggestion = suggestion;
+		this.isChoiceQ = false;
 	}
 
 	public String getSuggestion() {
@@ -20,13 +23,13 @@ public class QuizQuestion extends Question{
 	public void setSuggestion(String suggestion) {
 		this.suggestion = suggestion;
 	}
-	
+
 	@Override
 	public String QuestionToString() {
-		// TODO Auto-generated method stub
-		return "QuizQuestion:\t"+"\t" + chapter + "\t" + level + "\t" + suggestion;
+		return "QuizQuestion:\t" + "\t" + chapter + "\t" + level + "\t"
+				+ suggestion;
 	}
-	
+
 	@Override
 	public String ToQuestionString() {
 		return content + "\n";
