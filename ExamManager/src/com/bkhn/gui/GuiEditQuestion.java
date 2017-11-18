@@ -15,7 +15,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,9 +25,8 @@ import javax.swing.table.TableModel;
 import com.bkhn.common.Common;
 import com.bkhn.interfacecommon.ICommonGui;
 import com.bkhn.interfacecommon.IEditChoice;
-import com.bkhn.interfacecommon.IManagerQuestion;
+import com.bkhn.interfacecommon.IEditQuestion;
 import com.bkhn.model.ChoiceQuestion;
-import com.bkhn.model.Question;
 import com.bkhn.model.QuizQuestion;
 
 public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListener, IEditChoice {
@@ -76,15 +74,17 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	private JTextPane txPaneAnswerQuiz;
 	private ArrayList<String> currentChoices;
 	private ArrayList<String> currentAnsews;
-
-	private IManagerQuestion m_ownerQuetion;
-
 	private JTable tableQuestionQuiz;
 	private JTable tableQuestionChoose;
 	private EditChoice editChoice;
 
 	private int posQuizQues = 0;
 	private int posChoiceQues = 0;
+	private IEditQuestion owner;
+	
+	public void setOwner(IEditQuestion owner) {
+		this.owner = owner;
+	}
 
 	public GuiEditQuestion() {
 		init();
@@ -253,6 +253,15 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		btnSave = new JButton("Lưu\r\n");
 		btnSave.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnSave.setBounds(43, 577, 97, 31);
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(owner != null)
+					owner.onSaveQuestions();
+				
+			}
+		});
 		getContentPane().add(btnSave);
 
 		btnCancel = new JButton("Hủy");

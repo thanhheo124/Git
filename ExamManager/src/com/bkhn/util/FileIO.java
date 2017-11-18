@@ -57,6 +57,9 @@ public class FileIO {
 			File directory = new File(ORIGINAL_PATH + "");
 			if (!directory.exists())
 				directory.mkdirs();
+			File file = new File(ORIGINAL_PATH + "\\" + "subjects.txt");
+			if(!file.exists())
+				file.createNewFile();
 			BufferedReader reader = new BufferedReader(new FileReader(
 					ORIGINAL_PATH + "\\" + "subjects.txt"));
 			String str;
@@ -100,6 +103,9 @@ public class FileIO {
 			File directory = new File(ORIGINAL_PATH + "\\" + subjectName);
 			if (!directory.exists())
 				directory.mkdirs();
+			File file = new File(ORIGINAL_PATH + "\\" + subjectName +"\\"+ "choice.txt");
+			if(!file.exists())
+				file.createNewFile();
 			BufferedReader reader = new BufferedReader(new FileReader(
 					ORIGINAL_PATH + "\\" + subjectName +"\\"+ "choice.txt"));
 			String str = null;
@@ -156,8 +162,11 @@ public class FileIO {
 			File directory = new File(ORIGINAL_PATH + "\\" + subjectName);
 			if (!directory.exists())
 				directory.mkdirs();
+			File file = new File(ORIGINAL_PATH + "\\" + subjectName +"\\"+ "quiz.txt");
+			if(!file.exists())
+				file.createNewFile();
 			BufferedReader reader = new BufferedReader(new FileReader(
-					ORIGINAL_PATH + "\\" + subjectName +"\\"+ "choice.txt"));
+					ORIGINAL_PATH + "\\" + subjectName +"\\"+ "quiz.txt"));
 			String str = null;
 			while ((str = reader.readLine()) != null) {
 				if (!str.equals("") && !str.equals("\n")) {

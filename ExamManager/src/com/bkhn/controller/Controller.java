@@ -10,15 +10,20 @@ import com.bkhn.gui.GuiEditQuestion;
 import com.bkhn.gui.GuiManageObject;
 import com.bkhn.gui.GuiStart;
 import com.bkhn.interfacecommon.IChooseSubject;
+import com.bkhn.interfacecommon.IEditQuestion;
 import com.bkhn.interfacecommon.IManagerObject;
 import com.bkhn.interfacecommon.IStart;
+import com.bkhn.model.ChoiceQuestion;
+import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
 import com.bkhn.util.FileIO;
 
-public class Controller implements IManagerObject, IStart, IChooseSubject {
+public class Controller implements IManagerObject, IStart, IChooseSubject, IEditQuestion{
 	public static int CREAT_QUESTION_MODE = 1;
 	public static int CREAT_EXAM_MODE = 2;
 	private ArrayList<Subject> subjects;
+	private ArrayList<ChoiceQuestion> choiceQuestions;
+	private ArrayList<QuizQuestion> quizQuestions;
 	private FileIO fileIO;
 	private int guiMode;
 	private String idSubject;
@@ -29,6 +34,9 @@ public class Controller implements IManagerObject, IStart, IChooseSubject {
 	private GuiEditQuestion guiEditQuestion;
 
 	public Controller() {
+		subjects = new ArrayList<Subject>();
+		choiceQuestions = new ArrayList<ChoiceQuestion>();
+		quizQuestions = new ArrayList<QuizQuestion>();
 		fileIO = new FileIO();
 		subjects = fileIO.GetListSubject();
 		ShowGuiStart();
@@ -85,6 +93,9 @@ public class Controller implements IManagerObject, IStart, IChooseSubject {
 				guiStart.setVisible(true);
 			}
 		});
+		guiEditQuestion.setListChoiceQuestion(choiceQuestions);
+		guiEditQuestion.setListQuizQuestion(quizQuestions);
+		guiEditQuestion.setOwner(this);
 	}
 	
 	@Override
@@ -112,6 +123,8 @@ public class Controller implements IManagerObject, IStart, IChooseSubject {
 		System.out.println("onChooseSubject: " + idSubject);
 		this.idSubject = idSubject;
 		guiChooseSubject.setVisible(false);
+		choiceQuestions = fileIO.GetListChoiceQuestion(idSubject);
+		quizQuestions = fileIO.GetListQuizQuestion(idSubject);
 		switch (guiMode) {
 		case 1:
 			showGuiEditQuestions();
@@ -126,5 +139,11 @@ public class Controller implements IManagerObject, IStart, IChooseSubject {
 	public void onManagerSubject() {
 		System.out.println("onManagerSubject");
 		showGuiManagerObject();
+	}
+
+	@Override
+	public void onSaveQuestions() {
+		fileIO.UpdateListChoiceQuestion(choiceQuestions, idSubject);
+		fileIO.UpdateListQuizQuestion(quizQuestions, idSubject);
 	}
 }
