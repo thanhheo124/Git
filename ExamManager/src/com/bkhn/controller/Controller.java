@@ -2,6 +2,7 @@ package com.bkhn.controller;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import com.bkhn.gui.GuiChooseSubject;
@@ -79,6 +80,11 @@ public class Controller implements IManagerObject, IStart, IChooseSubject {
 		guiChooseSubject.setVisible(false);
 		guiEditQuestion = new GuiEditQuestion();
 		guiEditQuestion.setVisible(true);
+		guiEditQuestion.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				guiStart.setVisible(true);
+			}
+		});
 	}
 	
 	@Override

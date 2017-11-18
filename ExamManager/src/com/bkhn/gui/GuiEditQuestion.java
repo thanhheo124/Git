@@ -25,12 +25,13 @@ import javax.swing.table.TableModel;
 
 import com.bkhn.common.Common;
 import com.bkhn.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.IEditChoice;
 import com.bkhn.interfacecommon.IManagerQuestion;
 import com.bkhn.model.ChoiceQuestion;
 import com.bkhn.model.Question;
 import com.bkhn.model.QuizQuestion;
 
-public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListener {
+public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListener, IEditChoice {
 
 	/**
 	 * 
@@ -73,11 +74,14 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	private JComponent lblQuestionSame;
 	private Component checkCanMixQuestion;
 	private JTextPane txPaneAnswerQuiz;
+	private ArrayList<String> currentChoices;
+	private ArrayList<String> currentAnsews;
 
 	private IManagerQuestion m_ownerQuetion;
 
 	private JTable tableQuestionQuiz;
 	private JTable tableQuestionChoose;
+	private EditChoice editChoice;
 
 	private int posQuizQues = 0;
 	private int posChoiceQues = 0;
@@ -87,6 +91,10 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		addComps();
 		showcbbLevel();
 		showcbbChapter();
+		listChoiceQuestion = new ArrayList<ChoiceQuestion>();
+		listQuizQuestion = new ArrayList<QuizQuestion>();
+		currentChoices = new ArrayList<String>();
+		currentAnsews = new ArrayList<String>();
 	}
 
 	@Override
@@ -109,6 +117,21 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		lblAddQuestion.setForeground(Color.BLUE);
 		lblAddQuestion.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblAddQuestion.setBounds(56, 455, 114, 26);
+		lblAddQuestion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent event) {
+				System.out.println("insertQuestionQuiz");
+				QuizQuestion quizQuestion = new QuizQuestion(txPaneContentQues.getText(),
+						Common.partInt((String) cbbChapter.getSelectedItem()),
+						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
+				listQuizQuestion.add(quizQuestion);
+				loadDataQuizQuestionToGui();
+				actionTableQuizQuestion();
+				if(rdMultipleChoice.isSelected()) {//dang la mode cau hoi trac nghiem
+					AddChoiceQuestionToList();
+				}
+			}
+		});
 		getContentPane().add(lblAddQuestion);
 
 		lblTypeQuestion = new JLabel("Dạng câu hỏi");
@@ -130,18 +153,54 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		lblAdd.setForeground(Color.BLUE);
 		lblAdd.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblAdd.setBounds(410, 455, 114, 26);
+		lblAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ShowEditChoice(true);
+				
+			}
+		});
 		getContentPane().add(lblAdd);
 
 		lblEdit = new JLabel("<html><u>Chỉnh sửa</u><html>");
 		lblEdit.setForeground(Color.BLUE);
 		lblEdit.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblEdit.setBounds(516, 455, 114, 26);
+		lblEdit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ShowEditChoice(false);
+				int i = tableAnswer.getSelectedRow();
+				if(i>=0) {
+					System.out.println(""+ currentChoices.get(i));
+					editChoice.setStringChoice(currentChoices.get(i));
+					for(int j=0; j<currentAnsews.size(); j++) {
+						if(currentChoices.get(i).equals(currentAnsews.get(j))) {
+							editChoice.setIsAnser(true);
+							break;
+						}
+					}
+				}
+				editChoice.setIndex(i);
+				editChoice.updateView();
+			}
+		});
 		getContentPane().add(lblEdit);
 
 		lblDelete = new JLabel("<html><u>Xóa</u><html>");
 		lblDelete.setForeground(Color.RED);
 		lblDelete.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblDelete.setBounds(656, 455, 114, 26);
+		lblDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = tableAnswer.getSelectedRow();
+				System.out.println(i + " ps");
+				if (i < currentChoices.size() && i >=0)
+					currentChoices.remove(i);
+				showTableAnswer(currentChoices);
+			}
+		});
 		getContentPane().add(lblDelete);
 
 		lblLevel = new JLabel("Độ khó");
@@ -278,8 +337,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.
-			 * event.MouseEvent)
+			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt. event.MouseEvent)
 			 */
 			@Override
 			public void mouseClicked(MouseEvent event) {
@@ -356,16 +414,16 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
-			 * MouseEvent)
+			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event. MouseEvent)
 			 */
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int i = tableQuestionChoose.getSelectedRow();
+				currentChoices = listChoiceQuestion.get(i).getChoices();
+				currentAnsews = listChoiceQuestion.get(i).getAnswers();
 				TableModel model = tableQuestionChoose.getModel();
 				txPaneContentQues.setText(model.getValueAt(i, 0).toString());
-				// // Set data to form
-				showTableAnswer(listChoiceQuestion.get(i).getChoices());
+				showTableAnswer(currentChoices);
 				cbbLevel.setSelectedItem((listChoiceQuestion.get(i).getLevel() + "").toString());
 				cbbChapter.setSelectedItem((listChoiceQuestion.get(i).getChapter() + "").toString());
 				posChoiceQues = i;
@@ -415,12 +473,6 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 */
 	private void actionTableQuizQuestion() {
 		tableQuestionQuiz.addMouseListener(new MouseAdapter() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
-			 * MouseEvent)
-			 */
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int i = tableQuestionQuiz.getSelectedRow();
@@ -432,7 +484,6 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 				cbbChapter.setSelectedItem((listQuizQuestion.get(i).getChapter() + "").toString());
 				posQuizQues = i;
 				updateQuizQuestion();
-				insertQuestionQuiz();
 
 			}
 		});
@@ -446,31 +497,6 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		DefaultTableModel model = (DefaultTableModel) tableQuestionQuiz.getModel();
 		model.setRowCount(0);
 		loadDataQuizQuestion(listQuizQuestion);
-	}
-
-	/**
-	 * 
-	 */
-	private void insertQuestionQuiz() {
-		lblAddQuestion.addMouseListener(new MouseAdapter() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.
-			 * MouseEvent)
-			 */
-			@Override
-			public void mouseClicked(MouseEvent event) {
-				QuizQuestion quizQuestion = new QuizQuestion();
-				// 0, txPaneContentQues.getText(), nameSubject,
-				// Common.partInt((String) cbbChapter.getSelectedItem()),
-				// Common.partInt((String) cbbLevel.getSelectedItem()),
-				// txPaneAnswerQuiz.getText());
-				if (m_ownerQuetion.insertQuizQuestion(quizQuestion)) {
-					JOptionPane.showMessageDialog(null, "Insert success");
-				}
-			}
-		});
 	}
 
 	/**
@@ -513,6 +539,8 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 *            : list choiceQuestion
 	 */
 	private void loadDataChoiceQuestion(ArrayList<ChoiceQuestion> listChoiceQ) {
+		if(listChoiceQ.size() == 0)
+			return;
 		DefaultTableModel model = (DefaultTableModel) tableQuestionChoose.getModel();
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
 		for (int i = 0; i < listChoiceQ.size(); i++) {
@@ -528,6 +556,8 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 *            : list quiz Question
 	 */
 	private void loadDataQuizQuestion(ArrayList<QuizQuestion> listQuizQ) {
+		if(listQuizQ.size() == 0)
+			return;
 		DefaultTableModel model = (DefaultTableModel) tableQuestionQuiz.getModel();
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
 		for (int i = 0; i < listQuizQ.size(); i++) {
@@ -552,48 +582,53 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	public void setListChoiceQuestion(ArrayList<ChoiceQuestion> listChoiceQuestion) {
 		this.listChoiceQuestion = listChoiceQuestion;
 	}
+	
+	private void ShowEditChoice(boolean isAdd)
+	{
+		editChoice = new EditChoice();
+		editChoice.setVisible(true);
+		editChoice.setOwner(this);
+		editChoice.setModeEdit(isAdd);
+	}
 
-	/**
-	 * When click a row in table => show infor question in diferent component
-	 * 
-	 * @param event
-	 */
-	// protected void TableMouseClicked(MouseEvent event) {
-	// int i = tableQuestion.getSelectedRow();
-	// TableModel model = tableQuestion.getModel();
-	// if (rdEssay.isSelected()) {
-	// for (int j = 0; j < listQuizQuestion.size(); j++) {
-	//// id_CH = listQuizQuestion.get(i).getId();
-	//// nameSubject = listQuizQuestion.get(i).getSubject();
-	// // Set data to form
-	// txPaneAnswerQuiz.setText(listQuizQuestion.get(j).getSuggestion());
-	// cbbLevel.setSelectedItem((listQuizQuestion.get(j).getLevel() +
-	// "").toString());
-	// cbbChapter.setSelectedItem((listQuizQuestion.get(i).getChapter() +
-	// "").toString());
-	//
-	// updateQuizQuestion();
-	// deleteQuestionQuiz();
-	// }
-	// } else {
-	// for (int j = 0; j < listChoiceQuestion.size(); j++) {
-	// DefaultTableModel modelTableAnswer = (DefaultTableModel)
-	// tableAnswer.getModel();
-	// modelTableAnswer.setRowCount(0);
-	// showTableAnswer(listChoiceQuestion.get(j));
-	//
-	//// id_CH = listChoiceQuestion.get(i).getId();
-	//// nameSubject = listChoiceQuestion.get(i).getSubject();
-	//
-	// // Set data to form
-	// cbbLevel.setSelectedItem((listChoiceQuestion.get(j).getLevel() +
-	// "").toString());
-	// cbbChapter.setSelectedItem((listChoiceQuestion.get(i).getChapter() +
-	// "").toString());
-	//
-	// deleteQuestionChoice();
-	// }
-	// }
-	// }
+	@Override
+	public void onUpdateEditChoice(String choice, boolean isAnwer, int index) {
+		currentChoices.set(index, choice);
+		int pos = -1;
+		for(int i=0; i< currentAnsews.size(); i++) {
+			if(currentAnsews.get(i).equals(choice)){
+				pos = i;
+				break;
+			}
+		}
+		if(isAnwer) {
+			if(pos == -1)
+				currentAnsews.add(choice);
+		}
+		else
+		{
+			if(pos > -1)
+				currentAnsews.remove(pos);
+		}
+		showTableAnswer(currentChoices);
+	}
 
+	@Override
+	public void onAddEditChoices(String choice, boolean isAnwer) {
+		currentChoices.add(choice);
+		if(isAnwer)
+			currentAnsews.add(choice);
+		showTableAnswer(currentChoices);
+	}
+	
+	public void AddChoiceQuestionToList() {
+		ChoiceQuestion choiceQuestion = new ChoiceQuestion();
+		choiceQuestion.setContent(txPaneContentQues.getText());
+		choiceQuestion.setChapter(Common.partInt((String) cbbChapter.getSelectedItem()));
+		choiceQuestion.setLevel(Common.partInt((String) cbbLevel.getSelectedItem()));
+		listChoiceQuestion.add(choiceQuestion);
+		loadDataChoiceQuestion();
+		actionTableChoiceQuestion();
+	}
+	
 }

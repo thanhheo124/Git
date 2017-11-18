@@ -11,5 +11,10 @@ public class Main {
 //		GuiCreatExamAuto gui = new GuiCreatExamAuto();
 //		gui.setVisible(true);
 //		ControllerQuestion controllerQuestion = new ControllerQuestion();
+//		GuiManager guiManager = new GuiManager();
 	}
 }
+
+
+
+/// co cach nao noi chyen truc tiep duoc khong k

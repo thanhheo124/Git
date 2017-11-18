@@ -10,6 +10,8 @@ public class ChoiceQuestion extends Question {
 
 	public ChoiceQuestion() {
 		this.isChoiceQ = true;
+		choices = new ArrayList<String>();
+		answers = new ArrayList<String>();
 	}
 
 	public ChoiceQuestion(String content, int chapter, int level,
@@ -18,6 +20,10 @@ public class ChoiceQuestion extends Question {
 		this.choices = choices;
 		this.answers = answers;
 		this.isChoiceQ = true;
+		if(choices == null)
+			choices = new ArrayList<String>();
+		if(answers == null)
+			answers = new ArrayList<String>();
 	}
 
 	public ArrayList<String> getChoices() {
