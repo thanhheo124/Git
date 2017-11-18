@@ -28,9 +28,9 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 	private int guiMode;
 	private String idSubject;
 
-	private GuiManageObject guiManageObject;
 	private GuiStart guiStart;
 	private GuiChooseSubject guiChooseSubject;
+	private GuiManageObject guiManageObject;
 	private GuiEditQuestion guiEditQuestion;
 
 	public Controller() {
