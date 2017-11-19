@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.bkhn.model.ChoiceQuestion;
+import com.bkhn.model.Exam;
 import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
 
@@ -80,19 +81,28 @@ public class FileIO {
 	}
 
 	/*------------------------ Question common ---------------------*/
-	private int UpdateListChoiceQuestion(ArrayList<ChoiceQuestion> choiceQuestions, String filePath, String fileName) {
-			String content = "";
-			if (choiceQuestions.size() <= 0)
-				return 0;
-			for (int i = 0; i < choiceQuestions.size(); i++) {
-				content += choiceQuestions.get(i).ToJsonString();
-				content += "\n";
-			}
-			WriteStringToFile(content, filePath, fileName);
-			return choiceQuestions.size();
+
+	private ChoiceQuestion JsonStringToChoiceQuestion(String jsonStr) {
+		return null;
 	}
-	
-	private	 ArrayList<ChoiceQuestion> GetListChoiceQuestion(String filePath, String fileName){
+
+	private QuizQuestion jsonStringToQuizQuestion(String jsonStr) {
+		return null;
+	}
+
+	private int UpdateListChoiceQuestion(ArrayList<ChoiceQuestion> choiceQuestions, String filePath, String fileName) {
+		String content = "";
+		if (choiceQuestions.size() <= 0)
+			return 0;
+		for (int i = 0; i < choiceQuestions.size(); i++) {
+			content += choiceQuestions.get(i).ToJsonString();
+			content += "\n";
+		}
+		WriteStringToFile(content, filePath, fileName);
+		return choiceQuestions.size();
+	}
+
+	private ArrayList<ChoiceQuestion> GetListChoiceQuestion(String filePath, String fileName) {
 		ArrayList<ChoiceQuestion> questiones = new ArrayList<ChoiceQuestion>();
 
 		try {
@@ -102,8 +112,7 @@ public class FileIO {
 			File file = new File(ORIGINAL_PATH + filePath + "\\" + fileName);
 			if (!file.exists())
 				file.createNewFile();
-			BufferedReader reader = new BufferedReader(
-					new FileReader(ORIGINAL_PATH + filePath + "\\" + fileName));
+			BufferedReader reader = new BufferedReader(new FileReader(ORIGINAL_PATH + filePath + "\\" + fileName));
 			String str = null;
 			while ((str = reader.readLine()) != null) {
 				if (!str.equals("") && !str.equals("\n")) {
@@ -136,7 +145,7 @@ public class FileIO {
 		}
 		return questiones;
 	}
-	
+
 	private int UpdateListQuizQuestion(ArrayList<QuizQuestion> quizQuestions, String filePath, String fileName) {
 		String content = "";
 		if (quizQuestions.size() <= 0)
@@ -148,7 +157,7 @@ public class FileIO {
 		WriteStringToFile(content, filePath, fileName);
 		return quizQuestions.size();
 	}
-	
+
 	private ArrayList<QuizQuestion> GetListQuizQuestion(String filePath, String fileName) {
 		ArrayList<QuizQuestion> questiones = new ArrayList<QuizQuestion>();
 
@@ -159,8 +168,7 @@ public class FileIO {
 			File file = new File(ORIGINAL_PATH + filePath + "\\" + "quiz.txt");
 			if (!file.exists())
 				file.createNewFile();
-			BufferedReader reader = new BufferedReader(
-					new FileReader(ORIGINAL_PATH + filePath + "\\" + "quiz.txt"));
+			BufferedReader reader = new BufferedReader(new FileReader(ORIGINAL_PATH + filePath + "\\" + "quiz.txt"));
 			String str = null;
 			while ((str = reader.readLine()) != null) {
 				if (!str.equals("") && !str.equals("\n")) {
@@ -184,7 +192,7 @@ public class FileIO {
 		}
 		return questiones;
 	}
-	
+
 	/*------------------------ ChoiceQuestion ---------------------*/
 	public int UpdateListChoiceQuestion(ArrayList<ChoiceQuestion> choiceQuestions, String subjectName) {
 		return UpdateListChoiceQuestion(choiceQuestions, "\\" + subjectName, "choice.txt");
@@ -204,8 +212,49 @@ public class FileIO {
 	}
 
 	/*------------------------ Exam -----------------------------*/
-	public ArrayList<ChoiceQuestion> GetListChoiceExam(String subjectName, String examName) {
+
+	public void UpdateExam(Exam exam) {
+		String filePath = "\\Exams\\" + exam.getSubjectId() + "\\" + exam.getName();
+		String fileName = "general.txt";
+		String content = exam.getName() +"\n" + exam.getSubjectName() + "\n" + exam.getSubjectId() + "\n" + exam.getTime();
+		WriteStringToFile(content, filePath, fileName);
+		UpdateListChoiceQuestion(exam.getChoiceQuestions(), filePath, "choice.txt");
+		UpdateListQuizQuestion(exam.getQuizQuestions(), filePath, "quiz.txt");
+	}
+
+	public Exam GetExame(String subjectName, String examName) {
+		Exam exam = new Exam();
+		String filePath = "\\Exams\\" + exam.getSubjectId() + "\\" + exam.getName();
+		String fileName = "general.txt";
 		
-		return null;
+		try {
+			File directory = new File(ORIGINAL_PATH + filePath);
+			if (!directory.exists())
+				directory.mkdirs();
+			File file = new File(ORIGINAL_PATH + filePath + "\\" + fileName);
+			if (!file.exists())
+				file.createNewFile();
+			BufferedReader reader = new BufferedReader(new FileReader(ORIGINAL_PATH + filePath + "\\" + fileName));
+			String str;
+			if((str = reader.readLine()) != null)
+				exam.setName(str);
+
+			if((str = reader.readLine()) != null)
+				exam.setSubjectName(str);
+			
+			if((str = reader.readLine()) != null)
+				exam.setSubjectId(str);
+				
+			if((str = reader.readLine()) != null)
+				exam.setTime(Float.parseFloat(str));
+				
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		exam.setChoiceQuestions(GetListChoiceQuestion(filePath, "choice.txt"));
+		exam.setQuizQuestions(GetListQuizQuestion(filePath, "quiz.txt"));
+		
+		return exam;
 	}
 }

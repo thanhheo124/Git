@@ -7,6 +7,7 @@ public class Exam {
 	private ArrayList<QuizQuestion> quizQuestions;
 	private String subjectName;
 	private String subjectId;
+	private String name;
 	private float time;
 	
 	public Exam(){
@@ -62,6 +63,14 @@ public class Exam {
 
 	public void setTime(float time) {
 		this.time = time;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String ExamToQuestionString() {
