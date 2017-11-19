@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.bkhn.gui.GuiChooseSubject;
 import com.bkhn.gui.GuiEditQuestion;
+import com.bkhn.gui.GuiManageExam;
 import com.bkhn.gui.GuiManageObject;
 import com.bkhn.gui.GuiStart;
 import com.bkhn.interfacecommon.IChooseSubject;
@@ -32,6 +33,7 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 	private GuiChooseSubject guiChooseSubject;
 	private GuiManageObject guiManageObject;
 	private GuiEditQuestion guiEditQuestion;
+	private GuiManageExam guiManageExam;
 
 	public Controller() {
 		subjects = new ArrayList<Subject>();
@@ -98,6 +100,12 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 		guiEditQuestion.setOwner(this);
 	}
 	
+	public void showGUIManageExam()
+	{
+		guiManageExam = new GuiManageExam();
+		guiManageExam.setVisible(true);
+	}
+	
 	@Override
 	public void updateSubjectData(ArrayList<Subject> subjects) {
 		this.subjects = subjects;
@@ -130,7 +138,7 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 			showGuiEditQuestions();
 			break;
 		case 2:
-			// show exam mode
+			showGUIManageExam();
 			break;
 		}
 	}

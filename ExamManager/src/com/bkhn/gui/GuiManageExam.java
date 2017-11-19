@@ -7,8 +7,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
 
 import com.bkhn.interfacecommon.ICommonGui;
+import javax.swing.JTable;
+import javax.swing.JList;
+import javax.swing.JPanel;
 
 public class GuiManageExam extends JFrame implements ICommonGui{
 
@@ -19,9 +24,9 @@ public class GuiManageExam extends JFrame implements ICommonGui{
 	private static final int WIDTH_FRAME = 700;
 	private static final int HEIGHT_FRAME = 500;
 	private JLabel lblManageExam;
-	private JScrollPane scrollPane;
-	private JTextPane txtPane;
 	private JButton btnUpdate;
+	private JTable table;
+	private JScrollPane scrollPane;
 
 	
 	public GuiManageExam() {
@@ -45,19 +50,10 @@ public class GuiManageExam extends JFrame implements ICommonGui{
 		lblManageExam.setBounds(216, 27, 220, 33);
 		getContentPane().add(lblManageExam);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(33, 71, 617, 235);
-		getContentPane().add(scrollPane);
-		
 		btnUpdate = new JButton("Chỉnh sửa đề thi");
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnUpdate.setBounds(90, 335, 143, 33);
 		getContentPane().add(btnUpdate);
-		
-		txtPane = new JTextPane();
-		txtPane.setBounds(33, 71, 615, 233);
-		getContentPane().add(txtPane);
-		txtPane.setText("không biết set chỗ này ra sao.");
 		
 		JButton btnCustom = new JButton("Đề thi tùy chỉnh");
 		btnCustom.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -68,5 +64,16 @@ public class GuiManageExam extends JFrame implements ICommonGui{
 		btnAuto.setFont(new Font("Dialog", Font.BOLD, 13));
 		btnAuto.setBounds(438, 335, 149, 33);
 		getContentPane().add(btnAuto);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(90, 93, 497, 202);
+		getContentPane().add(scrollPane);
+		
+		table = new JTable();
+		Object columns[] = {"name"};
+		DefaultTableModel model = new DefaultTableModel();
+		model.setColumnIdentifiers(columns);
+		table.setModel(model);
+		scrollPane.setViewportView(table);
 	}
 }
