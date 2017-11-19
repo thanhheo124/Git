@@ -24,8 +24,11 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.bkhn.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.IEditExam;
 import com.bkhn.model.ChoiceQuestion;
+import com.bkhn.model.Exam;
 import com.bkhn.model.QuizQuestion;
+import com.bkhn.model.Subject;
 
 public class GuiEditExam extends JFrame implements ICommonGui{
 
@@ -71,10 +74,17 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 	private int indexDtmQuestion;
 	private int indexExamQuestion;
 	private Random rand; // Global variable
+	private Subject subject;
+	private IEditExam owner;
 	
-	
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
 
 	public GuiEditExam() {
+		subject = new Subject();
+		listChoice = new ArrayList<ChoiceQuestion>();
+		listQuiz = new ArrayList<QuizQuestion>();
 		init();
 		addComps();
 	}
@@ -540,5 +550,17 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 		getContentPane().add(txtpnDDD);
 		
 		
+	}
+
+	public void setListChoice(ArrayList<ChoiceQuestion> listChoice) {
+		this.listChoice = listChoice;
+	}
+
+	public void setListQuiz(ArrayList<QuizQuestion> listQuiz) {
+		this.listQuiz = listQuiz;
+	}
+	
+	public void setOwner(IEditExam owner) {
+		this.owner = owner;
 	}
 }

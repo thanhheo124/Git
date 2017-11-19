@@ -19,7 +19,13 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.bkhn.interfacecommon.ICommonGui;
+import com.bkhn.interfacecommon.IEditExam;
+import com.bkhn.model.ChoiceQuestion;
+import com.bkhn.model.QuizQuestion;
+import com.bkhn.model.Subject;
+
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 
@@ -60,8 +66,25 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 	private JRadioButton radionSummer;
 	private JTextPane txtPaneExam;
 	private JTextField txtMinutes;
+	//manh.lv
+	private IEditExam owner;
+	private Subject subject;
+	private ArrayList<ChoiceQuestion> listChoice;
+	private ArrayList<ChoiceQuestion> listChoiceExam;
+	private ArrayList<QuizQuestion> listQuiz;
+	private ArrayList<QuizQuestion> listQuizExam;
+	
+	public void setOwner(IEditExam owner) {
+		this.owner = owner;
+	}
 
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
+	
 	public GuiCreatExamAuto() {
+		listChoice = new ArrayList<ChoiceQuestion>();
+		listQuiz = new ArrayList<QuizQuestion>();
 		init();
 		addComps();
 	}
@@ -258,10 +281,13 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		btnXaCuHi.setBounds(224, 542, 121, 40);
 		getContentPane().add(btnXaCuHi);
 		
-		
-		
-		
-		
-		
+	}
+	
+	public void setListChoice(ArrayList<ChoiceQuestion> listChoice) {
+		this.listChoice = listChoice;
+	}
+
+	public void setListQuiz(ArrayList<QuizQuestion> listQuiz) {
+		this.listQuiz = listQuiz;
 	}
 }

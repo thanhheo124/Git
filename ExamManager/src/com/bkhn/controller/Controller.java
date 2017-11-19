@@ -6,20 +6,25 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import com.bkhn.gui.GuiChooseSubject;
+import com.bkhn.gui.GuiCreatExamAuto;
+import com.bkhn.gui.GuiEditExam;
 import com.bkhn.gui.GuiEditQuestion;
 import com.bkhn.gui.GuiManageExam;
 import com.bkhn.gui.GuiManageObject;
 import com.bkhn.gui.GuiStart;
 import com.bkhn.interfacecommon.IChooseSubject;
+import com.bkhn.interfacecommon.IEditExam;
 import com.bkhn.interfacecommon.IEditQuestion;
+import com.bkhn.interfacecommon.IGuiManageExam;
 import com.bkhn.interfacecommon.IManagerObject;
 import com.bkhn.interfacecommon.IStart;
 import com.bkhn.model.ChoiceQuestion;
+import com.bkhn.model.Exam;
 import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
 import com.bkhn.util.FileIO;
 
-public class Controller implements IManagerObject, IStart, IChooseSubject, IEditQuestion{
+public class Controller implements IManagerObject, IStart, IChooseSubject, IEditQuestion, IGuiManageExam, IEditExam{
 	public static int CREAT_QUESTION_MODE = 1;
 	public static int CREAT_EXAM_MODE = 2;
 	private ArrayList<Subject> subjects;
@@ -34,6 +39,8 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 	private GuiManageObject guiManageObject;
 	private GuiEditQuestion guiEditQuestion;
 	private GuiManageExam guiManageExam;
+	private GuiEditExam guiEditExam;
+	GuiCreatExamAuto guiCreatExamAuto;
 
 	public Controller() {
 		subjects = new ArrayList<Subject>();
@@ -104,6 +111,47 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 	{
 		guiManageExam = new GuiManageExam();
 		guiManageExam.setVisible(true);
+		guiManageExam.setOwner(this);
+		guiManageExam.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				guiStart.setVisible(true);
+			}
+		});
+	}
+	
+	public void showGuiEdiExam() {
+		guiEditExam = new GuiEditExam();
+		guiEditExam.setVisible(true);
+		guiEditExam.setOwner(this);
+		guiEditExam.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				guiManageExam.setVisible(true);
+			}
+		});
+		guiEditExam.setListChoice(choiceQuestions);
+		guiEditExam.setListQuiz(quizQuestions);
+		for(int i=0; i< subjects.size(); i++) {
+			if(subjects.get(i).getId().equals(idSubject))
+				guiEditExam.setSubject(subjects.get(i));
+		}
+	}
+	
+	public void showGuiAutoExam()
+	{
+		guiCreatExamAuto = new GuiCreatExamAuto();
+		guiCreatExamAuto.setVisible(true);
+		guiCreatExamAuto.setOwner(this);
+		guiCreatExamAuto.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				guiManageExam.setVisible(true);
+			}
+		});
+		guiCreatExamAuto.setListChoice(choiceQuestions);
+		guiCreatExamAuto.setListQuiz(quizQuestions);
+		for(int i=0; i< subjects.size(); i++) {
+			if(subjects.get(i).getId().equals(idSubject))
+				guiCreatExamAuto.setSubject(subjects.get(i));
+		}
 	}
 	
 	@Override
@@ -153,5 +201,31 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 	public void onSaveQuestions() {
 		fileIO.UpdateListChoiceQuestion(choiceQuestions, idSubject);
 		fileIO.UpdateListQuizQuestion(quizQuestions, idSubject);
+	}
+
+	@Override
+	public void onEditExam() {
+		System.out.println("onEditExam");
+		guiManageExam.setVisible(false);
+	}
+
+	@Override
+	public void onCreatExamByHand() {
+		System.out.println("onCreatExamByHand");
+		guiManageExam.setVisible(false);
+		showGuiEdiExam();
+	}
+
+	@Override
+	public void onCreatExamAuto() {
+		System.out.println("onCreatExamAuto");
+		guiManageExam.setVisible(false);
+		showGuiAutoExam();
+	}
+
+	@Override
+	public void onUpdateExam(Exam exam) {
+		System.out.println("onUpdateExam");
+		fileIO.UpdateExam(exam);
 	}
 }

@@ -222,9 +222,9 @@ public class FileIO {
 		UpdateListQuizQuestion(exam.getQuizQuestions(), filePath, "quiz.txt");
 	}
 
-	public Exam GetExame(String subjectName, String examName) {
+	public Exam GetExame(String subjectId, String examName) {
 		Exam exam = new Exam();
-		String filePath = "\\Exams\\" + exam.getSubjectId() + "\\" + exam.getName();
+		String filePath = "\\Exams\\" + subjectId + "\\" + exam.getName();
 		String fileName = "general.txt";
 		
 		try {

@@ -13,8 +13,9 @@ public class Exam {
 	public Exam(){
 		choiceQuestions = new ArrayList<ChoiceQuestion>();
 		quizQuestions = new ArrayList<QuizQuestion>();
-		subjectName = "";
-		subjectId = "";
+		subjectName = "noSubjectName";
+		subjectId = "noIdName";
+		name = "noName";
 		time = 0;
 	}
 		
