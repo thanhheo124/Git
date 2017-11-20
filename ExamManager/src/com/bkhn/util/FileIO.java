@@ -18,7 +18,7 @@ import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
 
 public class FileIO {
-	public static final String ORIGINAL_PATH = "D:\\OOP\\data";
+	public static final String ORIGINAL_PATH = "E:\\OOP\\data";
 
 	public boolean WriteStringToFile(String content, String filePath, String fileName) {
 		try {
