@@ -126,7 +126,7 @@ public class FileIO {
 					ChoiceQuestion question = new ChoiceQuestion(content, chapter, level, null, null);
 					for (int i = 0; i < numc; i++) {
 						String choice = (String) object.get("choices" + i);
-						question.addChoices(choice);
+						question.addAnswers(choice);
 					}
 					for (int i = 0; i < numa; i++) {
 						String answer = (String) object.get("answers" + i);
