@@ -76,12 +76,16 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 	private Random rand; // Global variable
 	private Subject subject;
 	private IEditExam owner;
+	private Exam exam;
+	private JScrollPane scrollPane_2;
+	private JScrollPane scrollPane_3;
 	
 	public void setSubject(Subject subject) {
 		this.subject = subject;
 	}
 
 	public GuiEditExam() {
+		exam = new Exam();
 		subject = new Subject();
 		listChoice = new ArrayList<ChoiceQuestion>();
 		listQuiz = new ArrayList<QuizQuestion>();
@@ -184,6 +188,8 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 		listChoiceExam=new ArrayList<ChoiceQuestion>();
 		listQuiz=new ArrayList<QuizQuestion>();
 		listQuizExam=new ArrayList<QuizQuestion>();
+		exam.setChoiceQuestions(listChoiceExam);
+		exam.setQuizQuestions(listQuizExam);
 		
 		//create list question	
 //		ChoiceQuestion choiceQuestion0 = new ChoiceQuestion( "Choise question 0", "IT101", 9, 8, null, null);
@@ -269,14 +275,18 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 		txtPointQuestion = new JTextField();
 		txtPointQuestion.setBackground(Color.WHITE);
 		txtPointQuestion.setBounds(549, 387, 57, 22);
+		txtPointQuestion.setText("0" );
 		getContentPane().add(txtPointQuestion);
 		txtPointQuestion.setColumns(10);
 		
+		scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(454, 440, 396, 172);
+		getContentPane().add(scrollPane_3);
+		
 		
 		txtPaneInformationExam = new JTextPane();
+		scrollPane_3.setViewportView(txtPaneInformationExam);
 		txtPaneInformationExam.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		txtPaneInformationExam.setBounds(454, 440, 396, 257);
-		getContentPane().add(txtPaneInformationExam);
 		
 		btnChooseRandomQuestion = new JButton("Chọn câu hỏi ngẫu nhiên");
 		btnChooseRandomQuestion.addActionListener(new ActionListener() {
@@ -325,7 +335,10 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 				int indexRealQuiz=indexDtmQuestion-listChoice.size();
 				if(radioMulti.isSelected()){
 					if(checkQuestion(listChoiceExam, null, listChoice.get(indexDtmQuestion).getContent()))
+					{
+						listChoice.get(indexDtmQuestion).setMark(Double.parseDouble(txtPointQuestion.getText()));
 						listChoiceExam.add(listChoice.get(indexDtmQuestion));
+					}
 				}
 				else if(radioEssay.isSelected()){
 					if(checkQuestion(null, listQuizExam, listQuiz.get(indexDtmQuestion).getContent()))
@@ -543,11 +556,22 @@ public class GuiEditExam extends JFrame implements ICommonGui{
 		btnXaCuHi.setBounds(218, 657, 89, 23);
 		getContentPane().add(btnXaCuHi);
 		
+		scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(460, 118, 330, 226);
+		getContentPane().add(scrollPane_2);
+		
 		txtpnDDD = new JTextPane();
+		scrollPane_2.setViewportView(txtpnDDD);
 		txtpnDDD.setBorder(new LineBorder(new Color(0, 0, 0)));
-		txtpnDDD.setText("d\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd");
-		txtpnDDD.setBounds(460, 118, 330, 226);
-		getContentPane().add(txtpnDDD);
+		
+		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				owner.onUpdateExam(exam);
+			}
+		});
+		btnSave.setBounds(743, 657, 89, 23);
+		getContentPane().add(btnSave);
 		
 		
 	}
