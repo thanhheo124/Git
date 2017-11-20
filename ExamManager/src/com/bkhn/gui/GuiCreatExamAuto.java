@@ -83,6 +83,7 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 	private int index;
 	private int time;
 	private int year;
+	private JScrollPane scrollPane_1;
 	
 
 	public GuiCreatExamAuto() {
@@ -478,10 +479,13 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		txtYear.setText("2017");
 		getContentPane().add(txtYear);
 		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(417, 273, 417, 367);
+		getContentPane().add(scrollPane_1);
+		
 		txtPaneExam = new JTextPane();
-		txtPaneExam.setText("adsa\r\ndsa\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nđ\r\nd\r\n\r\nđ\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\n\r\nd\r\nđ\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd\r\nd");
-		txtPaneExam.setBounds(417, 273, 417, 367);
-		getContentPane().add(txtPaneExam); 
+		scrollPane_1.setViewportView(txtPaneExam);
+		txtPaneExam.setText("");
 		// chỗ này adđ scrooll pane vào rồi mà??
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(31, 275, 314, 254);
