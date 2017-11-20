@@ -28,7 +28,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-
 @SuppressWarnings("serial")
 public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 
@@ -38,22 +37,24 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 	private JLabel lblTypeExam;
 	private JRadioButton radioGeneral;
 	private JRadioButton radioEssay;
-	private JComponent radioAll;
+	private JRadioButton radioAll;	
 	private JLabel lblWay;
 	private JRadioButton radioSpecific;
 	private JLabel lblNumberQuestion;
+	private JLabel lblChapter1;
+	private Component lblChapter2;
+	private JLabel lblChapter3;
 	private JSpinner spinnerQuestionNumber;
 	private JComboBox<String> cbbLevel;
-	private JCheckBox checkLevel;
-	private JCheckBox checkNumberQuesOfChapter;
-	private JSpinner spinnerChapter1;
+	private JSpinner spinnerChapter2;
+	private JSpinner spinnerChapter3;
 	private JButton btnCreateExam;
 	private JButton btnDelete;
 	private JButton btnSave;
 	private JLabel lblListQuestion;
 	private JScrollPane scrollPane;
 	private JTable tableListQuestion;
-	private JLabel lblMixQuestion;
+	private JLabel lblPrint;
 	private JLabel lblExport;
 	private JLabel lblTime;
 	private JLabel lblInfomationExam;
@@ -61,33 +62,119 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 	private JLabel lblSeason;
 	private JLabel lblYear;
 	private JTextField txtYear;
+	private JLabel lblExchangeQuestion;
+	private JLabel lblDeleteQuestionInExam;
 	private JRadioButton radioSeason1;
 	private JRadioButton radioSeason2;
 	private JRadioButton radionSummer;
 	private JTextPane txtPaneExam;
 	private JTextField txtMinutes;
-	//manh.lv
-	private IEditExam owner;
-	private Subject subject;
+	private DefaultTableModel dtm;
+	
+	
+	private ArrayList<ArrayList<ChoiceQuestion>> list;
 	private ArrayList<ChoiceQuestion> listChoice;
 	private ArrayList<ChoiceQuestion> listChoiceExam;
 	private ArrayList<QuizQuestion> listQuiz;
 	private ArrayList<QuizQuestion> listQuizExam;
+	private int soCau;
+	private int doKho;
+	private Subject subject;
+	private int index;
+	private int time;
+	private int year;
 	
-	public void setOwner(IEditExam owner) {
-		this.owner = owner;
-	}
 
-	public void setSubject(Subject subject) {
-		this.subject = subject;
-	}
-	
 	public GuiCreatExamAuto() {
 		listChoice = new ArrayList<ChoiceQuestion>();
 		listQuiz = new ArrayList<QuizQuestion>();
+		subject = new Subject();
+		subject.setNumChapter(4);
 		init();
 		addComps();
 	}
+	
+	public int radomCauHoi(){
+		int n=0;
+		return n;
+	}
+	
+	public ArrayList<ArrayList<ChoiceQuestion>> listC (ArrayList<ChoiceQuestion> list,Subject sub,int doKho){
+		ArrayList<ArrayList<ChoiceQuestion>> listChoice = new ArrayList<>();
+		
+		int numChap=sub.getNumChapter();
+		for(int i=1;i<= numChap;i++){
+			ArrayList<ChoiceQuestion> listChoiceOfChap = new ArrayList<ChoiceQuestion>();
+			for(int j=0;j<list.size();j++){
+				ChoiceQuestion question=new ChoiceQuestion();
+				if(question.getChapter()==i && doKho==question.getLevel()){
+					listChoiceOfChap.add(question);
+				}
+				listChoice.add(listChoiceOfChap);
+			}
+		}
+		
+		return listChoice;
+	}
+	
+	public int random(int min,int max) {
+		Random r=new Random();
+		int radomNum=r.nextInt(Math.abs(max - min)+1);
+		if(min<max) radomNum +=min;
+		else radomNum +=max;
+		System.out.println(radomNum);
+		return radomNum;
+	}
+	
+	public boolean checkNum(ArrayList<Integer> listInt, int n){
+		boolean check=true;
+		for(int i=0;i<listInt.size();i++){
+			if(n==listInt.get(i)) check= false;
+			else check= true;
+		}
+		return check;
+	}
+	
+	public void loadListQuestion(ArrayList<ChoiceQuestion> listC,ArrayList<QuizQuestion> listQ, DefaultTableModel dtm){
+		dtm.setRowCount(0);
+		if(listC !=null){
+			for(ChoiceQuestion q:listC){
+			Vector<Object> vec=new Vector<Object>();
+			vec.add(q.getContent());
+			dtm.addRow(vec);
+			}
+		}
+		if(listQ !=null){
+			for(QuizQuestion q:listQ){
+			Vector<Object> vec=new Vector<Object>();
+			vec.add(q.getContent());
+			dtm.addRow(vec);
+			}
+		}
+	}
+	
+	public void loadContenExam(ArrayList<ChoiceQuestion> listC,ArrayList<QuizQuestion> listQ,JTextPane jtp){
+		String s="";
+		int k=1;
+		if(listC !=null){
+			for(int i=0;i<listC.size();i++){
+				s +=k+". "+listC.get(i).getContent()+"\n";
+				for(int j=0;j<listC.get(i).getChoices().size();j++){
+					s += listC.get(i).getChoices().get(j)+"\n";
+				}
+				k++;
+			}
+		}
+		if(listQ !=null){
+			for(int i=0;i<listQ.size();i++){
+				s+= k+". "+listQ.get(i).getContent()+"\n";
+				k++;
+			}
+			
+		}
+		jtp.setText(s);
+	}
+	
 	@Override
 	public void init() {
 		setTitle("Quản lý đề thi");
@@ -99,11 +186,39 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 
 	@Override
 	public void addComps() {
+		// create list of list question group by chap
+		//create list question	
+		ChoiceQuestion choiceQuestion0 = new ChoiceQuestion( "Choise question 0", 9, 8, null,null);
+		choiceQuestion0.addChoices("hanoi");
+		choiceQuestion0.addAnswers("hanoi");
+		choiceQuestion0.addChoices("vietnam");
+		ChoiceQuestion choiceQuestion1 = new ChoiceQuestion( "Choise question 1", 8, 0, null, null);
+		choiceQuestion1.addChoices("hanoi");
+		choiceQuestion1.addAnswers("hanoi");
+		choiceQuestion1.addChoices("vietnam");
+		
+		listChoice.add(choiceQuestion0);
+		listChoice.add(choiceQuestion1);
+		
+		//create list question
+		QuizQuestion question1 = new QuizQuestion( "QuizQuestion 0", 2, 3, "suggestion0");
+		QuizQuestion question2 = new QuizQuestion( "QuizQuestion 1", 2, 3, "suggestion1");
+		QuizQuestion question3 = new QuizQuestion( "QuizQuestion 2", 2, 3, "suggestion2");
+		 listQuiz.add(question1);
+		 listQuiz.add(question2);
+		 listQuiz.add(question3);
+		
+		listQuiz=new ArrayList<>();
+		listChoice=new ArrayList<ChoiceQuestion>();
+		subject=new Subject();
+		listChoiceExam=new ArrayList<>();
+		listQuizExam=new ArrayList<>();
+	
 		lblTypeExam = new JLabel("Dạng đề thi");
 		lblTypeExam.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblTypeExam.setBounds(31, 13, 86, 25);
 		getContentPane().add(lblTypeExam);
-		
+			
 		lblWay = new JLabel("Hình thức");
 		lblWay.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblWay.setBounds(31, 51, 86, 25);
@@ -138,12 +253,6 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		lblYear= new JLabel("Năm học");
 		lblYear.setBounds(31, 726, 75, 16);
 		getContentPane().add(lblYear);
-		
-		lblMixQuestion = new JLabel("<html><u>Xóa các câu hỏi</u></html>");
-		lblMixQuestion.setForeground(Color.BLUE);
-		lblMixQuestion.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMixQuestion.setBounds(428, 661, 148, 22);
-		getContentPane().add(lblMixQuestion);
 		
 		lblExport = new JLabel("<html><u>Xuất ra file</u></html>");
 		lblExport.setForeground(Color.BLUE);
@@ -192,28 +301,142 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		spinnerQuestionNumber.setBounds(137, 102, 104, 22);
 		getContentPane().add(spinnerQuestionNumber);
 		
-
-		spinnerChapter1 = new JSpinner();
-		spinnerChapter1.setBounds(614, 102, 64, 22);
-		getContentPane().add(spinnerChapter1);
-		
 		
 		cbbLevel = new JComboBox<>();
 		cbbLevel.setBounds(137, 137, 104, 22);
+		cbbLevel.addItem("1");
+		cbbLevel.addItem("2");
+		cbbLevel.addItem("3");
+		cbbLevel.addItem("4");
+		cbbLevel.addItem("5");
 		getContentPane().add(cbbLevel);
-		
-		checkLevel = new JCheckBox("Độ khó");
-		checkLevel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		checkLevel.setBounds(31, 136, 100, 25);
-		getContentPane().add(checkLevel);
-		
-		checkNumberQuesOfChapter = new JCheckBox("Số lượng câu hỏi mỗi chương");
-		checkNumberQuesOfChapter.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		checkNumberQuesOfChapter.setBounds(342, 100, 228, 25);
-		getContentPane().add(checkNumberQuesOfChapter);
 		
 		
 		btnCreateExam = new JButton("Tạo đề thi");
+		btnCreateExam.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				int soChap=1;	
+				int soCauMoiChapExam=soCau/soChap;
+				int soCauChapCuoi=soCau-soCauMoiChapExam*soChap;
+				if(radioGeneral.isSelected())
+				{
+					radioEssay.setSelected(false);
+					radioAll.setSelected(false);
+					for(int i=1;i<=soChap;i++){
+						ChoiceQuestion question=new ChoiceQuestion();
+						ArrayList<Integer> listInt=new ArrayList<>();
+						int soCauHoi=0;
+						
+						if(i==soChap) soCauHoi=soCauChapCuoi;
+						else soCauHoi =soCauMoiChapExam;
+						
+						for(int j=0;j<soCauHoi;j++)
+						{
+							int radom=random(0,list.get(i).size()-1);
+							if(listInt.size() !=0){
+								if(checkNum(listInt, radom)){
+									question=list.get(i).get(radom);
+									listChoiceExam.add(question);
+									listInt.add(radom);
+								}
+							}
+							else{
+								question=list.get(i).get(radom);
+								listChoiceExam.add(question);
+								listInt.add(radom);
+								}
+					}
+				}
+					
+						loadListQuestion(listChoiceExam,null, dtm);
+						loadContenExam(listChoiceExam, null, txtPaneExam);
+					
+					
+				}
+				else if(radioEssay.isSelected()){
+					radioAll.setSelected(false);
+					radioGeneral.setSelected(false);
+					QuizQuestion question=new QuizQuestion();
+					ArrayList<Integer> listInt=new ArrayList<>();
+					for(int j=0;j<soCau;j++)
+					{
+						int radom=random(0,list.size()-1);
+						if(listInt.size() !=0){
+							if(checkNum(listInt, radom)){
+								question=listQuiz.get(radom);
+								listQuizExam.add(question);
+								listInt.add(radom);
+							}
+						}
+						else{
+							question=listQuiz.get(radom);
+							listQuizExam.add(question);
+							listInt.add(radom);
+							}
+				}
+					loadListQuestion(null,listQuizExam, dtm);
+					loadContenExam(null,listQuizExam, txtPaneExam);
+				}
+				if(radioAll.isSelected()){
+					radioEssay.setSelected(false);
+					radioGeneral.setSelected(false);
+					int soCauTN=(int) (soCau*0.8);
+					int soCauMoiChapExamTN=soCauTN/soChap;
+					int soCauChapCuoiTN=soCauTN-soCauMoiChapExamTN*soChap;
+					int soCauTL=soCau-soCauTN;
+					for(int i=1;i<=soChap;i++){
+						ChoiceQuestion question=new ChoiceQuestion();
+						ArrayList<Integer> listInt=new ArrayList<>();
+						int soCauHoi=0;
+						
+						if(i==soChap) soCauHoi=soCauChapCuoiTN;
+						else soCauHoi =soCauMoiChapExamTN;
+						
+						for(int j=0;j<soCauHoi;j++)
+						{
+							int radom=random(0,list.get(i).size()-1);
+							if(listInt.size() !=0){
+								if(checkNum(listInt, radom)){
+									question=list.get(i).get(radom);
+									listChoiceExam.add(question);
+									listInt.add(radom);
+								}
+							}
+							else{
+								question=list.get(i).get(radom);
+								listChoiceExam.add(question);
+								listInt.add(radom);
+								}
+					}
+				}
+					
+					QuizQuestion question=new QuizQuestion();
+					ArrayList<Integer> listInt=new ArrayList<>();
+					for(int j=0;j<soCauTL;j++)
+					{
+						int radom=random(0,list.size()-1);
+						if(listInt.size() !=0){
+							if(checkNum(listInt, radom)){
+								question=listQuiz.get(radom);
+								listQuizExam.add(question);
+								listInt.add(radom);
+							}
+						}
+						else{
+							question=listQuiz.get(radom);
+							listQuizExam.add(question);
+							listInt.add(radom);
+							}
+				}
+					
+					loadListQuestion(listChoiceExam, listQuizExam, dtm);
+					loadContenExam(listChoiceExam,listQuizExam, txtPaneExam);
+					
+				}
+				
+			}
+			});
 		btnCreateExam.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnCreateExam.setBounds(613, 227, 127, 33);
 		getContentPane().add(btnCreateExam);
@@ -236,6 +459,7 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		txtMinutes.setColumns(10);
 		txtMinutes.setBackground(Color.WHITE);
 		txtMinutes.setBounds(109, 677, 116, 22);
+		txtMinutes.setText("45");
 		getContentPane().add(txtMinutes);
 		
 		
@@ -243,6 +467,7 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		txtYear.setColumns(10);
 		txtYear.setBackground(Color.WHITE);
 		txtYear.setBounds(109, 727, 116, 22);
+		txtYear.setText("2017");
 		getContentPane().add(txtYear);
 		
 		txtPaneExam = new JTextPane();
@@ -255,39 +480,64 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		getContentPane().add(scrollPane);
 		
 		tableListQuestion = new JTable();
-		tableListQuestion.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null},
-			},
-			new String[] {
-				"New column"
+		tableListQuestion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				index=tableListQuestion.getSelectedRow();
+				if(radioGeneral.isSelected()){
+					listChoiceExam.remove(index);
+				}
+				else if(radioEssay.isSelected()){
+					listQuizExam.remove(index);
+				}
+				else if(radioAll.isSelected()){
+					if(index<listChoiceExam.size()){
+						listChoiceExam.remove(index);
+					}
+					else{
+						int indexQ=index-listChoiceExam.size();
+						listQuizExam.remove(indexQ);
+					}
+				}
+				
 			}
-		));
+		});
+		dtm=new DefaultTableModel(
+				new Object[][] {
+					{null},
+				},
+				new String[] {
+					"New column"
+				}
+			);
+		tableListQuestion.setModel(dtm);
 		scrollPane.setViewportView(tableListQuestion);
 		
 		JButton btnThayTh = new JButton("Thay thế");
-		btnThayTh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btnThayTh.setForeground(Color.WHITE);
 		btnThayTh.setBackground(Color.BLUE);
 		btnThayTh.setBounds(28, 542, 116, 40);
 		getContentPane().add(btnThayTh);
 		
 		JButton btnXaCuHi = new JButton("Xóa câu hỏi");
+		btnXaCuHi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btnXaCuHi.setForeground(Color.WHITE);
 		btnXaCuHi.setBackground(Color.RED);
 		btnXaCuHi.setBounds(224, 542, 121, 40);
 		getContentPane().add(btnXaCuHi);
 		
-	}
-	
-	public void setListChoice(ArrayList<ChoiceQuestion> listChoice) {
-		this.listChoice = listChoice;
-	}
-
-	public void setListQuiz(ArrayList<QuizQuestion> listQuiz) {
-		this.listQuiz = listQuiz;
+		JLabel lblKh = new JLabel("Độ khó");
+		lblKh.setBounds(31, 141, 46, 14);
+		getContentPane().add(lblKh);
+		
+		time=Integer.parseInt(txtMinutes.getText());
+		year=Integer.parseInt(txtYear.getText());
+		doKho=Integer.parseInt(cbbLevel.getSelectedItem().toString());
+		soCau=Integer.parseInt(spinnerQuestionNumber.getValue().toString());
+		list= listC(listChoice, subject,doKho);		
 	}
 }
