@@ -24,7 +24,7 @@ import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
 import com.bkhn.util.FileIO;
 
-public class Controller implements IManagerObject, IStart, IChooseSubject, IEditQuestion, IGuiManageExam, IEditExam{
+public class Controller implements IManagerObject, IStart, IChooseSubject, IEditQuestion, IGuiManageExam, IEditExam {
 	public static int CREAT_QUESTION_MODE = 1;
 	public static int CREAT_EXAM_MODE = 2;
 	private ArrayList<Subject> subjects;
@@ -40,7 +40,7 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 	private GuiEditQuestion guiEditQuestion;
 	private GuiManageExam guiManageExam;
 	private GuiEditExam guiEditExam;
-	GuiCreatExamAuto guiCreatExamAuto;
+	private GuiCreatExamAuto guiCreatExamAuto;
 
 	public Controller() {
 		subjects = new ArrayList<Subject>();
@@ -91,8 +91,7 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 		});
 	}
 
-	public void showGuiEditQuestions()
-	{
+	public void showGuiEditQuestions() {
 		System.out.println("showGuiEditQuestions");
 		guiChooseSubject.setVisible(false);
 		guiEditQuestion = new GuiEditQuestion();
@@ -106,9 +105,8 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 		guiEditQuestion.setListQuizQuestion(quizQuestions);
 		guiEditQuestion.setOwner(this);
 	}
-	
-	public void showGUIManageExam()
-	{
+
+	public void showGUIManageExam() {
 		guiManageExam = new GuiManageExam();
 		guiManageExam.setVisible(true);
 		guiManageExam.setOwner(this);
@@ -118,7 +116,7 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 			}
 		});
 	}
-	
+
 	public void showGuiEdiExam() {
 		guiEditExam = new GuiEditExam();
 		guiEditExam.setVisible(true);
@@ -130,30 +128,29 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 		});
 		guiEditExam.setListChoice(choiceQuestions);
 		guiEditExam.setListQuiz(quizQuestions);
-		for(int i=0; i< subjects.size(); i++) {
-			if(subjects.get(i).getId().equals(idSubject))
+		for (int i = 0; i < subjects.size(); i++) {
+			if (subjects.get(i).getId().equals(idSubject))
 				guiEditExam.setSubject(subjects.get(i));
 		}
 	}
-	
-	public void showGuiAutoExam()
-	{
+
+	public void showGuiAutoExam() {
 		guiCreatExamAuto = new GuiCreatExamAuto();
 		guiCreatExamAuto.setVisible(true);
-		guiCreatExamAuto.setOwner(this);
+		// guiCreatExamAuto.setOwner(this);
 		guiCreatExamAuto.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				guiManageExam.setVisible(true);
 			}
 		});
-		guiCreatExamAuto.setListChoice(choiceQuestions);
-		guiCreatExamAuto.setListQuiz(quizQuestions);
-		for(int i=0; i< subjects.size(); i++) {
-			if(subjects.get(i).getId().equals(idSubject))
-				guiCreatExamAuto.setSubject(subjects.get(i));
-		}
+		// guiCreatExamAuto.setListChoice(choiceQuestions);
+		// guiCreatExamAuto.setListQuiz(quizQuestions);
+		// for(int i=0; i< subjects.size(); i++) {
+		// if(subjects.get(i).getId().equals(idSubject))
+		// guiCreatExamAuto.setSubject(subjects.get(i));
+		// }
 	}
-	
+
 	@Override
 	public void updateSubjectData(ArrayList<Subject> subjects) {
 		this.subjects = subjects;

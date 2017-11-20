@@ -3,11 +3,16 @@ package com.bkhn.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -19,14 +24,9 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.bkhn.interfacecommon.ICommonGui;
-import com.bkhn.interfacecommon.IEditExam;
 import com.bkhn.model.ChoiceQuestion;
 import com.bkhn.model.QuizQuestion;
 import com.bkhn.model.Subject;
-
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class GuiCreatExamAuto extends JFrame implements ICommonGui{
@@ -483,7 +483,7 @@ public class GuiCreatExamAuto extends JFrame implements ICommonGui{
 		tableListQuestion.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				index=tableListQuestion.getSelectedRow();
+				index=tableListQuestion.getSelectedRow();	
 				if(radioGeneral.isSelected()){
 					listChoiceExam.remove(index);
 				}

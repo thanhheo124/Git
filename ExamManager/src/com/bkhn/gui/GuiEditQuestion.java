@@ -81,7 +81,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	private int posQuizQues = 0;
 	private int posChoiceQues = 0;
 	private IEditQuestion owner;
-	
+
 	public void setOwner(IEditQuestion owner) {
 		this.owner = owner;
 	}
@@ -120,16 +120,17 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		lblAddQuestion.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				System.out.println("insertQuestionQuiz");
-				QuizQuestion quizQuestion = new QuizQuestion(txPaneContentQues.getText(),
-						Common.partInt((String) cbbChapter.getSelectedItem()),
-						Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
-				listQuizQuestion.add(quizQuestion);
+				if (rdMultipleChoice.isSelected()) {// dang la mode cau hoi trac nghiem
+					AddChoiceQuestionToList();
+				} else {
+					System.out.println("insertQuestionQuiz");
+					QuizQuestion quizQuestion = new QuizQuestion(txPaneContentQues.getText(),
+							Common.partInt((String) cbbChapter.getSelectedItem()),
+							Common.partInt((String) cbbLevel.getSelectedItem()), txPaneAnswerQuiz.getText());
+					listQuizQuestion.add(quizQuestion);
+				}
 				loadDataQuizQuestionToGui();
 				actionTableQuizQuestion();
-				if(rdMultipleChoice.isSelected()) {//dang la mode cau hoi trac nghiem
-					AddChoiceQuestionToList();
-				}
 			}
 		});
 		getContentPane().add(lblAddQuestion);
@@ -157,7 +158,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ShowEditChoice(true);
-				
+
 			}
 		});
 		getContentPane().add(lblAdd);
@@ -171,11 +172,11 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			public void mouseClicked(MouseEvent e) {
 				ShowEditChoice(false);
 				int i = tableAnswer.getSelectedRow();
-				if(i>=0) {
-					System.out.println(""+ currentChoices.get(i));
+				if (i >= 0) {
+					System.out.println("" + currentChoices.get(i));
 					editChoice.setStringChoice(currentChoices.get(i));
-					for(int j=0; j<currentAnsews.size(); j++) {
-						if(currentChoices.get(i).equals(currentAnsews.get(j))) {
+					for (int j = 0; j < currentAnsews.size(); j++) {
+						if (currentChoices.get(i).equals(currentAnsews.get(j))) {
 							editChoice.setIsAnser(true);
 							break;
 						}
@@ -196,7 +197,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 			public void mouseClicked(MouseEvent e) {
 				int i = tableAnswer.getSelectedRow();
 				System.out.println(i + " ps");
-				if (i < currentChoices.size() && i >=0)
+				if (i < currentChoices.size() && i >= 0)
 					currentChoices.remove(i);
 				showTableAnswer(currentChoices);
 			}
@@ -254,12 +255,12 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		btnSave.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnSave.setBounds(43, 577, 97, 31);
 		btnSave.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(owner != null)
+				if (owner != null)
 					owner.onSaveQuestions();
-				
+
 			}
 		});
 		getContentPane().add(btnSave);
@@ -548,7 +549,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 *            : list choiceQuestion
 	 */
 	private void loadDataChoiceQuestion(ArrayList<ChoiceQuestion> listChoiceQ) {
-		if(listChoiceQ.size() == 0)
+		if (listChoiceQ.size() == 0)
 			return;
 		DefaultTableModel model = (DefaultTableModel) tableQuestionChoose.getModel();
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
@@ -565,7 +566,7 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	 *            : list quiz Question
 	 */
 	private void loadDataQuizQuestion(ArrayList<QuizQuestion> listQuizQ) {
-		if(listQuizQ.size() == 0)
+		if (listQuizQ.size() == 0)
 			return;
 		DefaultTableModel model = (DefaultTableModel) tableQuestionQuiz.getModel();
 		Object[] row = new Object[TABLEQUESTION_SOCOT];
@@ -591,9 +592,8 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	public void setListChoiceQuestion(ArrayList<ChoiceQuestion> listChoiceQuestion) {
 		this.listChoiceQuestion = listChoiceQuestion;
 	}
-	
-	private void ShowEditChoice(boolean isAdd)
-	{
+
+	private void ShowEditChoice(boolean isAdd) {
 		editChoice = new EditChoice();
 		editChoice.setVisible(true);
 		editChoice.setOwner(this);
@@ -604,19 +604,17 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	public void onUpdateEditChoice(String choice, boolean isAnwer, int index) {
 		currentChoices.set(index, choice);
 		int pos = -1;
-		for(int i=0; i< currentAnsews.size(); i++) {
-			if(currentAnsews.get(i).equals(choice)){
+		for (int i = 0; i < currentAnsews.size(); i++) {
+			if (currentAnsews.get(i).equals(choice)) {
 				pos = i;
 				break;
 			}
 		}
-		if(isAnwer) {
-			if(pos == -1)
+		if (isAnwer) {
+			if (pos == -1)
 				currentAnsews.add(choice);
-		}
-		else
-		{
-			if(pos > -1)
+		} else {
+			if (pos > -1)
 				currentAnsews.remove(pos);
 		}
 		showTableAnswer(currentChoices);
@@ -625,11 +623,11 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 	@Override
 	public void onAddEditChoices(String choice, boolean isAnwer) {
 		currentChoices.add(choice);
-		if(isAnwer)
+		if (isAnwer)
 			currentAnsews.add(choice);
 		showTableAnswer(currentChoices);
 	}
-	
+
 	public void AddChoiceQuestionToList() {
 		ChoiceQuestion choiceQuestion = new ChoiceQuestion();
 		choiceQuestion.setContent(txPaneContentQues.getText());
@@ -639,5 +637,5 @@ public class GuiEditQuestion extends JFrame implements ICommonGui, ActionListene
 		loadDataChoiceQuestion();
 		actionTableChoiceQuestion();
 	}
-	
+
 }
