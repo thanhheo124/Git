@@ -115,6 +115,9 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 				guiStart.setVisible(true);
 			}
 		});
+		
+		guiManageExam.setListExamPath(fileIO.getListExamPath());
+		guiManageExam.updateView();
 	}
 
 	public void showGuiEdiExam() {
@@ -183,6 +186,7 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 			showGuiEditQuestions();
 			break;
 		case 2:
+			
 			showGUIManageExam();
 			break;
 		}
@@ -225,4 +229,10 @@ public class Controller implements IManagerObject, IStart, IChooseSubject, IEdit
 		System.out.println("onUpdateExam");
 		fileIO.UpdateExam(exam);
 	}
+
+	@Override
+	public void onPrintExam(Exam exam) {
+		fileIO.PrintExam(exam);
+	}
 }
+
