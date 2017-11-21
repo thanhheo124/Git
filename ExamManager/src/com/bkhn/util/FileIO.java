@@ -212,11 +212,11 @@ public class FileIO {
 	}
 
 	/*------------------------ Exam -----------------------------*/
-
 	public void UpdateExam(Exam exam) {
 		String filePath = "\\Exams\\" + exam.getSubjectId() + "\\" + exam.getName();
 		String fileName = "general.txt";
-		String content = exam.getName() +"\n" + exam.getSubjectName() + "\n" + exam.getSubjectId() + "\n" + exam.getTime();
+		String content = exam.getName() + "\n" + exam.getSubjectName() + "\n" + exam.getSubjectId() + "\n"
+				+ exam.getTime();
 		WriteStringToFile(content, filePath, fileName);
 		UpdateListChoiceQuestion(exam.getChoiceQuestions(), filePath, "choice.txt");
 		UpdateListQuizQuestion(exam.getQuizQuestions(), filePath, "quiz.txt");
@@ -226,7 +226,7 @@ public class FileIO {
 		Exam exam = new Exam();
 		String filePath = "\\Exams\\" + subjectId + "\\" + exam.getName();
 		String fileName = "general.txt";
-		
+
 		try {
 			File directory = new File(ORIGINAL_PATH + filePath);
 			if (!directory.exists())
@@ -236,25 +236,62 @@ public class FileIO {
 				file.createNewFile();
 			BufferedReader reader = new BufferedReader(new FileReader(ORIGINAL_PATH + filePath + "\\" + fileName));
 			String str;
-			if((str = reader.readLine()) != null)
+			if ((str = reader.readLine()) != null)
 				exam.setName(str);
 
-			if((str = reader.readLine()) != null)
+			if ((str = reader.readLine()) != null)
 				exam.setSubjectName(str);
-			
-			if((str = reader.readLine()) != null)
+
+			if ((str = reader.readLine()) != null)
 				exam.setSubjectId(str);
-				
-			if((str = reader.readLine()) != null)
+
+			if ((str = reader.readLine()) != null)
 				exam.setTime(Float.parseFloat(str));
-				
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 		exam.setChoiceQuestions(GetListChoiceQuestion(filePath, "choice.txt"));
 		exam.setQuizQuestions(GetListQuizQuestion(filePath, "quiz.txt"));
-		
+
 		return exam;
+	}
+
+	public void PrintExam(Exam exam) {
+		File directory = new File(ORIGINAL_PATH + "\\ExamFile");
+		if(!directory.exists())
+			directory.mkdirs();
+		WriteStringToFile(exam.ExamToQuestionString(), ORIGINAL_PATH + "\\ExamFile", exam.getName() + "question.txt");
+		WriteStringToFile(exam.ExamToAnswerString(), ORIGINAL_PATH + "\\ExamFile", exam.getName() + "answer.txt");
+	}
+	
+	public ArrayList<String> getListExamPath() {
+		ArrayList<String> paths = new ArrayList<>();
+		File directory = new File(ORIGINAL_PATH + "\\Exams");
+		if(!directory.exists())
+			directory.mkdirs();
+		
+		File[] fList = directory.listFiles();
+
+		for (File file : fList) {
+			if (file.isDirectory()) {
+				System.out.println(file.getAbsolutePath());
+				paths.add(file.getAbsolutePath());
+				//
+				StringTokenizer st = new StringTokenizer(file.getAbsolutePath(),"\\");
+				int count = st.countTokens();
+				int i = 0;
+			     while (st.hasMoreTokens()) {
+			    	 String string = st.nextToken();
+			    	 i ++;
+			    	 if(i>=count - 1)
+			    		 System.out.println(string);  
+			     }
+			     //
+			}
+		}
+		
+		return paths;
 	}
 }
