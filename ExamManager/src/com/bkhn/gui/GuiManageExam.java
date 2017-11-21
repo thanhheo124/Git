@@ -32,12 +32,16 @@ public class GuiManageExam extends JFrame implements ICommonGui {
 	private JTable table;
 	private JScrollPane scrollPane;
 	private IGuiManageExam owner;
+	private DefaultTableModel model;
+
+	private ArrayList<String> listExamPath;
 
 	public void setOwner(IGuiManageExam owner) {
 		this.owner = owner;
 	}
 
 	public GuiManageExam() {
+		listExamPath = new ArrayList<>();
 		init();
 		addComps();
 	}
@@ -103,9 +107,21 @@ public class GuiManageExam extends JFrame implements ICommonGui {
 
 		table = new JTable();
 		Object columns[] = { "name" };
-		DefaultTableModel model = new DefaultTableModel();
+		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
 		scrollPane.setViewportView(table);
+	}
+
+	public void updateView() {
+		Object[] row = new Object[1];
+		for (int i = 0; i < listExamPath.size(); i++) {
+			row[0] = listExamPath.get(i);
+			model.addRow(row);
+		}
+	}
+	
+	public void setListExamPath(ArrayList<String> list) {
+		listExamPath = list;
 	}
 }
